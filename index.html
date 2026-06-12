@@ -164,6 +164,12 @@
       animation: toast-unlock 2400ms ease forwards;
     }
 
+    .badge-toast svg {
+      width: 26px;
+      height: 26px;
+      flex: 0 0 auto;
+    }
+
     main {
       position: relative;
     }
@@ -307,6 +313,318 @@
       background: #f0f4fb;
       font-size: 0.87rem;
       font-weight: 700;
+    }
+
+    .story-card-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .story-card {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 12px;
+      align-items: center;
+      width: 100%;
+      min-height: 126px;
+      padding: 13px;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      border-radius: 24px;
+      color: var(--ink);
+      background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(231,248,233,0.9));
+      box-shadow: 0 12px 24px rgba(49, 74, 112, 0.13);
+      text-align: left;
+      cursor: pointer;
+      transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, filter 150ms ease;
+    }
+
+    .story-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 216, 107, 0.9);
+      box-shadow: 0 17px 32px rgba(49, 74, 112, 0.18);
+      filter: saturate(1.03);
+    }
+
+    .story-card:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .story-card.is-coming {
+      cursor: default;
+      opacity: 0.74;
+      background: linear-gradient(145deg, #ffffff, #f0f4fb);
+    }
+
+    .story-card:disabled:hover {
+      transform: none;
+      box-shadow: 0 12px 24px rgba(49, 74, 112, 0.13);
+      border-color: rgba(255, 255, 255, 0.85);
+      filter: none;
+    }
+
+    .story-card-art {
+      width: 82px;
+      height: 82px;
+      display: grid;
+      place-items: center;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.68);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.62);
+    }
+
+    .story-card-art svg {
+      width: 76px;
+      height: 76px;
+      display: block;
+    }
+
+    .story-card-title {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 1.03rem;
+      line-height: 1.18;
+      font-weight: 900;
+    }
+
+    .story-card-desc {
+      display: block;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.34;
+    }
+
+    .story-card-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 9px;
+      min-height: 34px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      color: #14371f;
+      background: linear-gradient(145deg, #8be980, #ffd86b);
+      font-size: 0.86rem;
+      font-weight: 900;
+    }
+
+    .story-card.is-coming .story-card-action {
+      color: #536174;
+      background: #e8eef8;
+    }
+
+    .game-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px 16px 0;
+    }
+
+    .tool-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 42px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 2px solid rgba(97, 87, 204, 0.18);
+      color: var(--ink);
+      background: linear-gradient(145deg, #ffffff, #eef7ff);
+      box-shadow: 0 8px 16px rgba(49, 74, 112, 0.1);
+      font-size: 0.92rem;
+      font-weight: 900;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .tool-button[hidden] {
+      display: none;
+    }
+
+    .tool-button.is-on {
+      background: linear-gradient(145deg, #fff7bd, #8be980);
+      border-color: rgba(69, 182, 107, 0.34);
+    }
+
+    .parent-notes-panel {
+      display: none;
+      margin: 12px 16px 0;
+      padding: 14px;
+      border-radius: 21px;
+      background: linear-gradient(145deg, #ffffff, #fff8db);
+      border: 1px solid rgba(247, 169, 40, 0.24);
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .parent-notes-panel.open {
+      display: block;
+    }
+
+    .parent-notes-panel h3 {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .parent-notes-panel p,
+    .parent-notes-panel ul {
+      margin: 0 0 8px;
+    }
+
+    .parent-notes-panel ul {
+      padding-left: 18px;
+    }
+
+    .adventure-map {
+      margin: 12px 16px 0;
+      padding: 14px;
+      border-radius: 23px;
+      background: linear-gradient(145deg, #ffffff, #edf8ff);
+      border: 1px solid rgba(134, 217, 255, 0.35);
+      box-shadow: 0 10px 20px rgba(49, 74, 112, 0.1);
+    }
+
+    .map-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 900;
+    }
+
+    .map-path {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(var(--map-count, 6), minmax(60px, 1fr));
+      gap: 8px;
+      overflow-x: auto;
+      padding: 8px 2px 2px;
+    }
+
+    .map-path::before {
+      content: "";
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      top: 31px;
+      height: 6px;
+      border-radius: 999px;
+      background: #dbe7f3;
+    }
+
+    .map-progress-line {
+      position: absolute;
+      left: 28px;
+      top: 31px;
+      width: var(--map-progress, 0%);
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--leaf), var(--sun));
+      transition: width 260ms ease;
+    }
+
+    .map-marker {
+      position: absolute;
+      left: var(--marker-left, 0%);
+      top: 3px;
+      z-index: 3;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #fff7bd;
+      box-shadow: 0 8px 16px rgba(49, 74, 112, 0.18);
+      transform: translateX(-50%);
+      transition: left 300ms ease;
+      animation: marker-bounce 2.6s ease-in-out infinite;
+    }
+
+    .map-node {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      justify-items: center;
+      gap: 5px;
+      min-width: 58px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .map-dot {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 17px;
+      background: #fff;
+      border: 2px solid #dbe7f3;
+      box-shadow: 0 6px 14px rgba(49, 74, 112, 0.1);
+    }
+
+    .map-node.completed .map-dot {
+      border-color: rgba(69, 182, 107, 0.45);
+      background: #eaf9ea;
+    }
+
+    .map-node.current .map-dot {
+      border-color: rgba(247, 169, 40, 0.82);
+      background: #fff7bd;
+      box-shadow: 0 0 0 5px rgba(255, 216, 107, 0.24), 0 8px 16px rgba(49, 74, 112, 0.14);
+    }
+
+    .sticker-panel {
+      margin: 12px 16px 0;
+      padding: 14px;
+      border-radius: 23px;
+      background: linear-gradient(145deg, #ffffff, #f0fbf2);
+      border: 1px solid rgba(69, 182, 107, 0.2);
+    }
+
+    .sticker-panel h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .sticker-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .sticker {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      align-items: center;
+      gap: 8px;
+      min-height: 54px;
+      padding: 8px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid rgba(69, 182, 107, 0.22);
+      color: #2f4735;
+      font-size: 0.84rem;
+      font-weight: 900;
+      box-shadow: 0 7px 16px rgba(49, 74, 112, 0.08);
+    }
+
+    .sticker.locked {
+      color: #7c8798;
+      background: #f5f7fb;
+      border-style: dashed;
+      opacity: 0.72;
+      filter: grayscale(0.55);
+    }
+
+    .sticker.unlocked {
+      animation: sticker-pop 560ms ease both;
     }
 
     .how-to-list {
@@ -878,6 +1196,17 @@
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
+    @keyframes marker-bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-4px); }
+    }
+
+    @keyframes sticker-pop {
+      0% { transform: scale(0.94); }
+      55% { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+
     @keyframes david-walk {
       0%, 100% { transform: translate(0, 0); }
       45% { transform: translate(9px, -2px); }
@@ -958,6 +1287,19 @@
 
       .start-panel {
         grid-template-columns: 0.95fr 1.05fr;
+      }
+
+      .story-card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .story-card {
+        grid-template-columns: 1fr;
+        align-content: start;
+      }
+
+      .sticker-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
       }
 
       .choices-grid {
@@ -1065,6 +1407,8 @@
       .point-pop,
       .badge-toast,
       .badge-summary.reveal .virtue-badge,
+      .map-marker,
+      .sticker.unlocked,
       .game-card.story-turn-out .scene-layout,
       .game-card.story-turn-in .scene-layout {
         animation: none !important;
@@ -1105,13 +1449,7 @@
               <h3>Pick a Story</h3>
               <span class="mini-badge" aria-hidden="true">1</span>
             </div>
-            <label class="sr-only" for="storySelect">Story selector</label>
-            <select id="storySelect" class="story-select"></select>
-            <ul class="future-stories" id="futureStories" aria-label="Future Bible stories"></ul>
-            <button class="primary-action" id="startButton" type="button">
-              <span aria-hidden="true" id="startIcon"></span>
-              Start Adventure
-            </button>
+            <div id="storyCards" class="story-card-grid" aria-label="Story choices"></div>
           </div>
 
           <div class="how-to" aria-labelledby="howToHeading">
@@ -1120,7 +1458,7 @@
               <span class="mini-badge" aria-hidden="true">?</span>
             </div>
             <ul class="how-to-list">
-              <li><span class="mini-badge" aria-hidden="true">A</span><span>Read each short scene and choose what David should do next.</span></li>
+              <li><span class="mini-badge" aria-hidden="true">A</span><span>Read each short scene and choose the next faithful step.</span></li>
               <li><span class="mini-badge" aria-hidden="true">B</span><span>Every card gives Faith Points and a cheerful note of encouragement.</span></li>
               <li><span class="mini-badge" aria-hidden="true">C</span><span>Your choices may take a small detour, then the story keeps moving forward.</span></li>
             </ul>
@@ -1140,6 +1478,25 @@
             </div>
           </div>
 
+          <div class="game-tools" aria-label="Story tools">
+            <button class="tool-button" id="readToggleButton" type="button">
+              <span aria-hidden="true" id="readIcon"></span>
+              Read to Me
+            </button>
+            <button class="tool-button" id="readStopButton" type="button" hidden>
+              <span aria-hidden="true" id="stopIcon"></span>
+              Stop Reading
+            </button>
+            <button class="tool-button" id="parentNotesButton" type="button">
+              <span aria-hidden="true" id="notesIcon"></span>
+              Parent Notes
+            </button>
+          </div>
+
+          <div class="parent-notes-panel" id="parentNotesPanel" aria-live="polite"></div>
+          <div class="adventure-map" id="adventureMap" aria-label="Adventure map"></div>
+          <div class="sticker-panel" id="stickerPanel" aria-label="My Stickers"></div>
+
           <div class="scene-layout">
             <div id="sceneArt" class="scene-art" aria-hidden="true"></div>
             <div class="scene-body">
@@ -1147,7 +1504,7 @@
               <p id="storyText" class="story-text"></p>
               <div id="lessonBox" class="lesson-box"></div>
 
-              <h3 class="choice-heading">What should David choose?</h3>
+              <h3 class="choice-heading">What should you choose?</h3>
               <div id="choicesGrid" class="choices-grid" role="group" aria-label="Story choices"></div>
               <div id="feedback" class="feedback" aria-live="polite"></div>
             </div>
@@ -1186,16 +1543,6 @@
       SVG GRAPHICS: Art helpers are in the "svgArt" and "choiceIcon" functions.
     */
 
-    const futureStories = [
-      "Noah's Ark",
-      "Daniel in the Lions' Den",
-      "Esther Saves Her People",
-      "Jonah's Journey",
-      "Moses and the Red Sea",
-      "The Good Samaritan",
-      "The Lost Sheep"
-    ];
-
     const badgeCatalog = {
       prayer: { title: "Prayer Champion", note: "You chose to pray and trust God." },
       helpful: { title: "Helpful Friend", note: "You noticed people who needed kindness." },
@@ -1207,7 +1554,29 @@
     const stories = {
       david: {
         title: "David and Goliath",
+        description: "Serve faithfully, remember God's help, and practice humble courage.",
+        passage: "1 Samuel 17",
         available: true,
+        selectorArt: "david",
+        mapLocations: [
+          { id: "pasture", label: "Pasture", icon: "sheep" },
+          { id: "road", label: "Road", icon: "path" },
+          { id: "camp", label: "Camp", icon: "flag" },
+          { id: "stream", label: "Stream", icon: "stones" },
+          { id: "valley", label: "Valley", icon: "shield" },
+          { id: "victory", label: "Celebration", icon: "trophy" }
+        ],
+        parentNotes: {
+          passage: "1 Samuel 17",
+          lesson: "God helps us be brave, humble, and faithful in big and small moments.",
+          questions: [
+            "What helped David be brave?",
+            "How can we trust God when something feels big?",
+            "Who can we encourage this week?"
+          ],
+          prayer: "Lord, help us serve faithfully, speak kindly, and trust You with brave hearts."
+        },
+        endingThresholds: { high: 45, medium: 36 },
         totalSteps: 11,
         scenes: [
           {
@@ -1410,6 +1779,523 @@
             blessing: "You are loved, and every new try can be a fresh step of faith."
           }
         }
+      },
+      lostSheep: {
+        title: "The Lost Sheep",
+        description: "Join a gentle shepherd who searches with patience and care.",
+        passage: "Luke 15:1-7",
+        available: true,
+        selectorArt: "lostSheep",
+        mapLocations: [
+          { id: "village", label: "Village", icon: "heart" },
+          { id: "hills", label: "Hills", icon: "sheep" },
+          { id: "path", label: "Path", icon: "path" },
+          { id: "stream", label: "Stream", icon: "stones" },
+          { id: "found", label: "Sheep Found", icon: "help" },
+          { id: "celebration", label: "Celebration", icon: "trophy" }
+        ],
+        parentNotes: {
+          passage: "Luke 15:1-7",
+          lesson: "God loves each person and seeks the lost with patient care.",
+          questions: [
+            "How did the shepherd show love for one sheep?",
+            "When can we be patient helpers?",
+            "Who can we remind that they are loved by God?"
+          ],
+          prayer: "Lord, thank You for loving us and helping us care for others gently."
+        },
+        endingThresholds: { high: 34, medium: 29 },
+        totalSteps: 9,
+        scenes: [
+          {
+            id: "ls-village",
+            progressStep: 1,
+            art: "lostVillage",
+            title: "Morning by the Village",
+            text: "A shepherd begins the day near the village gate. The sheep are safe and woolly, but the shepherd knows every one matters. He gets ready to lead them with patience and care.",
+            lesson: "God's love notices each one.",
+            choices: [
+              { title: "Count Every Woolly Head", desc: "Look carefully before leaving the village.", points: 4, next: "ls-count", icon: "sheep", badges: ["listener", "servant"], feedback: "Careful eyes are loving eyes. The shepherd notices each sheep." },
+              { title: "Pray for a Caring Heart", desc: "Ask God to help him guide gently today.", points: 4, next: "ls-count", icon: "prayer", badges: ["prayer", "servant"], feedback: "A caring prayer starts the walk with peace." },
+              { title: "Lead Toward the Hills", desc: "Begin the path with a brave, watchful step.", points: 2, next: "ls-count", icon: "path", badges: ["brave"], feedback: "The shepherd is ready to go. Watchful care will help along the way." }
+            ]
+          },
+          {
+            id: "ls-count",
+            progressStep: 2,
+            art: "pasture",
+            title: "One Is Missing",
+            text: "The shepherd counts again and frowns gently. One little sheep is not with the flock. He does not scold the flock; he makes a careful plan to search.",
+            lesson: "Love takes time to notice who is missing.",
+            choices: [
+              { title: "Listen for a Little Bleat", desc: "Stand still and listen before choosing a path.", points: 4, next: "ls-hills", icon: "question", badges: ["listener"], feedback: "Listening helps the shepherd choose wisely." },
+              { title: "Ask a Helper to Watch the Flock", desc: "Keep the other sheep safe while searching.", points: 3, next: "ls-hills", icon: "help", badges: ["helpful", "servant"], feedback: "Wise care protects the flock while the search begins." },
+              { title: "Start Searching Right Away", desc: "Move toward the hills with hopeful courage.", points: 2, next: "ls-hills", icon: "feet", badges: ["brave"], feedback: "The shepherd moves with hope. A careful search will help him find the way." }
+            ]
+          },
+          {
+            id: "ls-hills",
+            progressStep: 3,
+            art: "lostHills",
+            title: "Over the Gentle Hills",
+            text: "The hills are sunny and quiet. A small trail bends around rocks and wildflowers. The shepherd looks for soft hoofprints and listens for a sound.",
+            lesson: "Patience can be part of love.",
+            choices: [
+              { title: "Follow the Tiny Hoofprints", desc: "Search the path with careful patience.", points: 4, next: "ls-path", icon: "path", badges: ["listener", "servant"], feedback: "The shepherd searches patiently and does not give up." },
+              { title: "Call Softly, Not Loudly", desc: "Use a gentle voice so the sheep feels safe.", points: 3, next: "ls-path", icon: "comfort", badges: ["helpful"], feedback: "Gentle words can help a worried sheep feel safe." },
+              { title: "Climb for a Better View", desc: "Look from higher ground with brave hope.", points: 3, next: "ls-path", icon: "stand", badges: ["brave"], feedback: "A brave view helps the shepherd keep searching." }
+            ]
+          },
+          {
+            id: "ls-path",
+            progressStep: 4,
+            art: "road",
+            title: "A Narrow Path",
+            text: "The trail grows narrow but not scary. The shepherd sees bent grass where something small may have passed. He chooses how to keep searching kindly.",
+            lesson: "Wisdom helps love take the next right step.",
+            choices: [
+              { title: "Move Slowly Along the Path", desc: "Step carefully so he does not miss clues.", points: 4, next: "ls-stream", icon: "steps", badges: ["listener"], feedback: "Slow steps can be wise steps." },
+              { title: "Encourage the Helper", desc: "Remind the helper that the little sheep matters.", points: 3, next: "ls-stream", icon: "heart", badges: ["helpful"], feedback: "Encouragement keeps the search hopeful." },
+              { title: "Pray While Walking", desc: "Ask God to help them care well.", points: 4, next: "ls-stream", icon: "prayer", badges: ["prayer"], feedback: "Prayer keeps the shepherd's heart steady." }
+            ]
+          },
+          {
+            id: "ls-stream",
+            progressStep: 5,
+            art: "stream",
+            title: "Sparkles by the Stream",
+            text: "A little stream sparkles beside the path. The shepherd sees wool caught on a soft branch. The sheep may be nearby, so he listens again.",
+            lesson: "God can help us notice small signs of care.",
+            choices: [
+              { title: "Check the Wool on the Branch", desc: "Look gently for a clue without rushing.", points: 4, next: "ls-quiet", icon: "stones", badges: ["listener"], feedback: "The shepherd notices a small clue and keeps hope." },
+              { title: "Pray Beside the Water", desc: "Ask God for patience and a gentle voice.", points: 4, next: "ls-quiet", icon: "streamPrayer", badges: ["prayer"], feedback: "A quiet prayer helps the search stay peaceful." },
+              { title: "Call Across the Stream", desc: "Speak kindly and listen for an answer.", points: 3, next: "ls-quiet", icon: "song", badges: ["helpful"], feedback: "The shepherd's kind voice carries across the water." }
+            ]
+          },
+          {
+            id: "ls-quiet",
+            progressStep: 6,
+            art: "quiet",
+            title: "A Quiet Listen",
+            text: "The shepherd pauses where the grass is soft. Then he hears a tiny bleat behind a low hill. His heart fills with relief and careful joy.",
+            lesson: "Listening can help us care well.",
+            choices: [
+              { title: "Pause and Listen Again", desc: "Make sure he knows where the sheep is.", points: 4, next: "ls-found", icon: "question", badges: ["listener"], feedback: "A second listen helps the shepherd go the right way." },
+              { title: "Go Gently Toward the Sound", desc: "Move slowly so the sheep is not startled.", points: 3, next: "ls-found", icon: "dove", badges: ["helpful"], feedback: "Gentle movement shows patient care." },
+              { title: "Thank God for the Clue", desc: "Whisper thanks before stepping forward.", points: 4, next: "ls-found", icon: "praise", badges: ["prayer"], feedback: "Thankfulness keeps joy pointed toward God." }
+            ]
+          },
+          {
+            id: "ls-found",
+            progressStep: 7,
+            art: "lostSheepFound",
+            title: "The Sheep Is Found",
+            text: "The little sheep is tired but safe in the grass. The shepherd smiles and kneels nearby. He wants to help without frightening the sheep.",
+            lesson: "Love is gentle when someone is weary.",
+            choices: [
+              { title: "Speak Softly to the Sheep", desc: "Let the little one know help is near.", points: 4, next: "ls-home", icon: "comfort", badges: ["helpful"], feedback: "Soft words help the sheep feel safe." },
+              { title: "Lift It Carefully", desc: "Carry the sheep with patient strength.", points: 4, next: "ls-home", icon: "sheep", badges: ["servant", "brave"], feedback: "The shepherd uses strength to serve gently." },
+              { title: "Check the Path Home", desc: "Choose the safest way back.", points: 3, next: "ls-home", icon: "path", badges: ["listener"], feedback: "Wise care thinks about the journey home." }
+            ]
+          },
+          {
+            id: "ls-home",
+            progressStep: 8,
+            art: "lostHome",
+            title: "Carried Home",
+            text: "The shepherd carries the sheep home with joy. The way back feels lighter because the little one is found. Soon the village can share the good news.",
+            lesson: "God rejoices when the lost are found.",
+            choices: [
+              { title: "Walk Slowly and Kindly", desc: "Carry the sheep at a gentle pace.", points: 4, next: "ls-celebration", icon: "steps", badges: ["servant"], feedback: "Gentle care continues all the way home." },
+              { title: "Sing a Thankful Song", desc: "Celebrate with a soft song of thanks.", points: 4, next: "ls-celebration", icon: "song", badges: ["prayer"], feedback: "Thankful joy makes the road bright." },
+              { title: "Invite Friends to Rejoice", desc: "Share the happy news with the village.", points: 3, next: "ls-celebration", icon: "help", badges: ["helpful"], feedback: "Good news is sweet to share." }
+            ]
+          },
+          {
+            id: "ls-celebration",
+            progressStep: 9,
+            art: "celebration",
+            title: "Joy in the Village",
+            text: "The village rejoices because the sheep is safe. Jesus told this story to show God's seeking love. Every child can remember: God cares for each one.",
+            lesson: "God loves and seeks the lost.",
+            choices: [
+              { title: "Thank God for Seeking Love", desc: "Remember that God cares for every person.", points: 4, next: "ending", icon: "praise", badges: ["prayer"], feedback: "A thankful heart remembers God's love." },
+              { title: "Care for the Little Sheep", desc: "Give water and rest after the journey.", points: 4, next: "ending", icon: "sheep", badges: ["servant", "helpful"], feedback: "Care keeps going after the celebration begins." },
+              { title: "Tell the Good News Kindly", desc: "Help others remember that each one matters.", points: 3, next: "ending", icon: "scroll", badges: ["helpful"], feedback: "Kind words can remind others they are loved." }
+            ]
+          }
+        ],
+        endings: {
+          high: {
+            title: "Caring Shepherd",
+            message: "You searched with patience, kindness, prayer, and gentle care. Your choices remembered that every sheep matters to God.",
+            blessing: "May you keep noticing people who need care and reminding them they are loved."
+          },
+          medium: {
+            title: "Helpful Friend",
+            message: "You helped the shepherd search with hope. You practiced listening, kindness, and patient care along the path.",
+            blessing: "God can grow a caring heart in every new step."
+          },
+          low: {
+            title: "Learning to Care",
+            message: "You walked through a story about God's seeking love. Every choice was a chance to learn gentle care.",
+            blessing: "You are loved by God, and you can keep learning to love others well."
+          }
+        }
+      },
+      goodSamaritan: {
+        title: "The Good Samaritan",
+        description: "Practice compassion by noticing and helping a neighbor.",
+        passage: "Luke 10:25-37",
+        available: true,
+        selectorArt: "samaritan",
+        mapLocations: [
+          { id: "road", label: "Road", icon: "path" },
+          { id: "notice", label: "Notice", icon: "heart" },
+          { id: "help", label: "Help", icon: "help" },
+          { id: "inn", label: "Inn", icon: "basket" },
+          { id: "mercy", label: "Mercy", icon: "dove" },
+          { id: "celebration", label: "Neighbor Love", icon: "trophy" }
+        ],
+        parentNotes: {
+          passage: "Luke 10:25-37",
+          lesson: "Jesus teaches us to love our neighbor with compassion and action.",
+          questions: [
+            "Who acted like a neighbor in Jesus' story?",
+            "How can we notice people others might overlook?",
+            "What is one kind action we can take this week?"
+          ],
+          prayer: "Lord, give us eyes to notice others and hearts ready to help with love."
+        },
+        endingThresholds: { high: 34, medium: 29 },
+        totalSteps: 9,
+        scenes: [
+          {
+            id: "gs-road",
+            progressStep: 1,
+            art: "samaritanRoad",
+            title: "A Road Near Jericho",
+            text: "Jesus tells about a road where travelers pass by. The path is warm and dusty, and people are busy with their own plans. This story asks what love does when someone needs help.",
+            lesson: "Love notices people on the path.",
+            choices: [
+              { title: "Walk With Watchful Eyes", desc: "Pay attention to people, not just the road.", points: 4, next: "gs-busy", icon: "question", badges: ["listener"], feedback: "Watchful eyes are ready for compassion." },
+              { title: "Pray for a Neighbor Heart", desc: "Ask God to help you love others well.", points: 4, next: "gs-busy", icon: "prayer", badges: ["prayer"], feedback: "Prayer can prepare a heart for mercy." },
+              { title: "Hurry With the Crowd", desc: "Move quickly but try to stay aware.", points: 2, next: "gs-busy", icon: "feet", badges: ["brave"], feedback: "Busy feet can still learn to notice." }
+            ]
+          },
+          {
+            id: "gs-busy",
+            progressStep: 2,
+            art: "road",
+            title: "Busy Travelers",
+            text: "Some travelers are in a hurry. A person near the road needs care, but others seem unsure what to do. The moment calls for compassion, wisdom, and courage.",
+            lesson: "A neighbor is someone who shows mercy.",
+            choices: [
+              { title: "Slow Down and Notice", desc: "Look carefully instead of passing by.", points: 4, next: "gs-notice", icon: "heart", badges: ["helpful", "listener"], feedback: "Compassion begins when someone slows down enough to see." },
+              { title: "Ask What Is Needed", desc: "Listen before deciding how to help.", points: 3, next: "gs-notice", icon: "question", badges: ["listener"], feedback: "Good help starts with listening." },
+              { title: "Look for Safe Help Nearby", desc: "Think wisely about how to help well.", points: 3, next: "gs-notice", icon: "shield", badges: ["brave"], feedback: "Wisdom and courage can work together." }
+            ]
+          },
+          {
+            id: "gs-notice",
+            progressStep: 3,
+            art: "neighborRoad",
+            title: "A Neighbor in Need",
+            text: "The Samaritan sees the person and feels compassion. The story stays gentle and does not focus on scary details. Love asks, 'How can I help?'",
+            lesson: "Compassion moves toward people with care.",
+            choices: [
+              { title: "Go Near With Kindness", desc: "Approach gently and speak calmly.", points: 4, next: "gs-plan", icon: "comfort", badges: ["helpful", "brave"], feedback: "Kind courage moves toward someone in need." },
+              { title: "Make a Careful Plan", desc: "Think about safety, water, and shelter.", points: 3, next: "gs-plan", icon: "scroll", badges: ["listener"], feedback: "Wise mercy plans the next right step." },
+              { title: "Offer a Peaceful Word", desc: "Let the neighbor know help is near.", points: 3, next: "gs-plan", icon: "dove", badges: ["helpful"], feedback: "Gentle words can bring comfort." }
+            ]
+          },
+          {
+            id: "gs-plan",
+            progressStep: 4,
+            art: "neighborCare",
+            title: "Mercy Takes Action",
+            text: "The Samaritan uses what he has to care for the traveler. He does not ask whether the person is important or popular. He sees a neighbor and helps.",
+            lesson: "Love is more than a feeling; love acts.",
+            choices: [
+              { title: "Share Water and Supplies", desc: "Use what he has to bring comfort.", points: 4, next: "gs-inn", icon: "basket", badges: ["helpful", "servant"], feedback: "Generosity turns compassion into help." },
+              { title: "Ask for Gentle Courage", desc: "Pray for strength to do the good work.", points: 4, next: "gs-inn", icon: "prayer", badges: ["prayer", "brave"], feedback: "Prayer can steady a caring heart." },
+              { title: "Choose the Safest Route", desc: "Prepare to bring the neighbor to shelter.", points: 3, next: "gs-inn", icon: "path", badges: ["listener"], feedback: "Wise care thinks about the journey ahead." }
+            ]
+          },
+          {
+            id: "gs-inn",
+            progressStep: 5,
+            art: "inn",
+            title: "A Place to Rest",
+            text: "The Samaritan brings the traveler to an inn where rest is possible. The innkeeper listens as the Samaritan explains what is needed. Compassion keeps going past the first moment.",
+            lesson: "Helping can include asking others to join in care.",
+            choices: [
+              { title: "Speak Kindly to the Innkeeper", desc: "Explain the need with respect.", points: 4, next: "gs-care", icon: "dove", badges: ["listener", "helpful"], feedback: "Kind communication helps more people join the care." },
+              { title: "Make Room for Rest", desc: "Help the neighbor settle safely.", points: 3, next: "gs-care", icon: "help", badges: ["servant"], feedback: "Service can be quiet and practical." },
+              { title: "Give Thanks for Help", desc: "Be grateful that shelter is near.", points: 4, next: "gs-care", icon: "praise", badges: ["prayer"], feedback: "Thankfulness keeps mercy humble." }
+            ]
+          },
+          {
+            id: "gs-care",
+            progressStep: 6,
+            art: "innCare",
+            title: "Care That Continues",
+            text: "The Samaritan does not disappear after helping once. He makes sure the traveler will keep receiving care. Jesus shows that neighbor love is steady and generous.",
+            lesson: "Mercy keeps caring after the first step.",
+            choices: [
+              { title: "Promise to Check Back", desc: "Plan to return and make sure care continues.", points: 4, next: "gs-generous", icon: "heart", badges: ["servant"], feedback: "Steady care shows faithful love." },
+              { title: "Encourage the Innkeeper", desc: "Thank the helper for caring too.", points: 3, next: "gs-generous", icon: "help", badges: ["helpful"], feedback: "Encouragement helps kindness spread." },
+              { title: "Listen One More Time", desc: "Ask if anything else is needed.", points: 4, next: "gs-generous", icon: "question", badges: ["listener"], feedback: "Listening keeps help from becoming rushed." }
+            ]
+          },
+          {
+            id: "gs-generous",
+            progressStep: 7,
+            art: "generosity",
+            title: "Generous Mercy",
+            text: "The Samaritan gives what is needed for the traveler's care. He chooses generosity instead of walking away. His actions answer Jesus' question about being a neighbor.",
+            lesson: "We love our neighbor through compassion and action.",
+            choices: [
+              { title: "Give With a Glad Heart", desc: "Help generously and humbly.", points: 4, next: "gs-morning", icon: "heart", badges: ["helpful", "servant"], feedback: "Generosity can be a beautiful act of love." },
+              { title: "Remember God's Kindness", desc: "Let gratitude shape the way he gives.", points: 4, next: "gs-morning", icon: "praise", badges: ["prayer"], feedback: "Remembering God's kindness helps us be kind." },
+              { title: "Choose Mercy Again", desc: "Decide that love is worth the cost.", points: 3, next: "gs-morning", icon: "faith", badges: ["brave"], feedback: "Mercy can take courage, and courage can be gentle." }
+            ]
+          },
+          {
+            id: "gs-morning",
+            progressStep: 8,
+            art: "village",
+            title: "A New Morning",
+            text: "The road is quiet again, but the story is not forgotten. Jesus asks who was a neighbor. The answer is the one who showed mercy.",
+            lesson: "Jesus invites us to go and do likewise.",
+            choices: [
+              { title: "Name the Mercy Helper", desc: "Remember who acted like a true neighbor.", points: 4, next: "gs-celebration", icon: "truth", badges: ["listener"], feedback: "You noticed the heart of the story." },
+              { title: "Think of Someone to Help", desc: "Choose a real way to show kindness this week.", points: 4, next: "gs-celebration", icon: "help", badges: ["helpful"], feedback: "Neighbor love can continue after the story." },
+              { title: "Pray for Compassion", desc: "Ask God for eyes that notice others.", points: 4, next: "gs-celebration", icon: "prayer", badges: ["prayer"], feedback: "Prayer can grow a compassionate heart." }
+            ]
+          },
+          {
+            id: "gs-celebration",
+            progressStep: 9,
+            art: "celebration",
+            title: "Go and Do Likewise",
+            text: "Jesus' story ends with a loving invitation. Mercy is not only something to admire; it is something to practice. A neighbor is made by compassionate action.",
+            lesson: "Love your neighbor with kindness and action.",
+            choices: [
+              { title: "Choose Compassion Today", desc: "Look for one person to encourage or help.", points: 4, next: "ending", icon: "heart", badges: ["helpful"], feedback: "Compassion can begin with one kind choice." },
+              { title: "Serve Without Showing Off", desc: "Help quietly and humbly.", points: 3, next: "ending", icon: "servant", badges: ["servant"], feedback: "Quiet service is still beautiful service." },
+              { title: "Thank God for Neighbors", desc: "Remember that every person matters to Him.", points: 4, next: "ending", icon: "praise", badges: ["prayer"], feedback: "Thankfulness helps us love people well." }
+            ]
+          }
+        ],
+        endings: {
+          high: {
+            title: "Compassion Champion",
+            message: "You practiced mercy, courage, generosity, and wise care. Your choices showed neighbor love through kind action.",
+            blessing: "May God help you notice people others overlook and love them well."
+          },
+          medium: {
+            title: "Helpful Neighbor",
+            message: "You made caring choices and learned how compassion can become action.",
+            blessing: "Keep growing in mercy, patience, and practical kindness."
+          },
+          low: {
+            title: "Learning Mercy",
+            message: "You walked through Jesus' story and practiced seeing others with compassion.",
+            blessing: "Every new day is a chance to love your neighbor gently."
+          }
+        }
+      },
+      danielPrayer: {
+        title: "Daniel's Brave Prayer",
+        description: "Practice faithful prayer, wisdom, and peaceful trust with Daniel.",
+        passage: "Daniel 6",
+        available: true,
+        selectorArt: "daniel",
+        mapLocations: [
+          { id: "home", label: "Daniel's Room", icon: "prayer" },
+          { id: "window", label: "Window", icon: "faith" },
+          { id: "palace", label: "Palace", icon: "scroll" },
+          { id: "lions", label: "Quiet Den", icon: "shield" },
+          { id: "morning", label: "Morning", icon: "sun" },
+          { id: "celebration", label: "Praise", icon: "trophy" }
+        ],
+        parentNotes: {
+          passage: "Daniel 6",
+          lesson: "Daniel prayed faithfully and trusted God with peaceful courage.",
+          questions: [
+            "Why did Daniel keep praying?",
+            "What can help us be faithful when something feels hard?",
+            "How can prayer give us peace?"
+          ],
+          prayer: "Lord, help us pray faithfully, choose wisdom, and trust You with peaceful hearts."
+        },
+        endingThresholds: { high: 34, medium: 29 },
+        totalSteps: 9,
+        scenes: [
+          {
+            id: "dp-room",
+            progressStep: 1,
+            art: "danielRoom",
+            title: "Daniel's Quiet Room",
+            text: "Daniel loves God and prays each day. His room is peaceful, and the window reminds him to turn his heart toward God. Today, he wants to keep being faithful.",
+            lesson: "Prayer can be a steady habit of trust.",
+            choices: [
+              { title: "Open the Prayer Window", desc: "Begin the day by turning toward God.", points: 4, next: "dp-news", icon: "prayer", badges: ["prayer", "servant"], feedback: "Daniel begins with prayerful faithfulness." },
+              { title: "Thank God for Wisdom", desc: "Remember that wisdom comes from God.", points: 4, next: "dp-news", icon: "praise", badges: ["prayer", "listener"], feedback: "Thankfulness makes Daniel's heart steady." },
+              { title: "Prepare for a Busy Day", desc: "Get ready to serve with courage.", points: 2, next: "dp-news", icon: "stand", badges: ["brave"], feedback: "Daniel is ready to serve. Prayer will help him stay steady." }
+            ]
+          },
+          {
+            id: "dp-news",
+            progressStep: 2,
+            art: "palace",
+            title: "Hard News at the Palace",
+            text: "Daniel hears about a rule that makes praying difficult. The story stays gentle and focuses on Daniel's faithful heart. He needs wisdom, courage, and peace.",
+            lesson: "Faithfulness can stay gentle under pressure.",
+            choices: [
+              { title: "Listen Before Answering", desc: "Understand the rule and stay calm.", points: 4, next: "dp-wisdom", icon: "question", badges: ["listener"], feedback: "Daniel listens carefully instead of reacting quickly." },
+              { title: "Pray for Peace", desc: "Ask God to help him stay faithful.", points: 4, next: "dp-wisdom", icon: "prayer", badges: ["prayer"], feedback: "Prayer helps Daniel face hard news peacefully." },
+              { title: "Stand With Quiet Courage", desc: "Choose not to panic.", points: 3, next: "dp-wisdom", icon: "shield", badges: ["brave"], feedback: "Daniel's courage is quiet and steady." }
+            ]
+          },
+          {
+            id: "dp-wisdom",
+            progressStep: 3,
+            art: "danielWindow",
+            title: "A Wise Choice",
+            text: "Daniel thinks about what is right. He does not want attention or trouble. He simply wants to keep praying to God as he always has.",
+            lesson: "Faithfulness is often quiet and steady.",
+            choices: [
+              { title: "Keep Praying Faithfully", desc: "Continue his regular prayer with humility.", points: 4, next: "dp-window", icon: "prayer", badges: ["prayer", "brave"], feedback: "Daniel chooses faithful prayer, not showing off." },
+              { title: "Ask God for Humility", desc: "Pray with a gentle, honest heart.", points: 4, next: "dp-window", icon: "faith", badges: ["prayer", "servant"], feedback: "Humility keeps Daniel's courage peaceful." },
+              { title: "Think Through the Next Step", desc: "Act wisely and calmly.", points: 3, next: "dp-window", icon: "scroll", badges: ["listener"], feedback: "Wise thinking helps courage stay clear." }
+            ]
+          },
+          {
+            id: "dp-window",
+            progressStep: 4,
+            art: "danielWindow",
+            title: "By the Open Window",
+            text: "Daniel kneels by the open window and prays. He thanks God and asks for help. His heart is brave, but his words are peaceful.",
+            lesson: "Prayer can bring courage and peace together.",
+            choices: [
+              { title: "Thank God First", desc: "Begin prayer with gratitude.", points: 4, next: "dp-questions", icon: "praise", badges: ["prayer"], feedback: "Daniel's thankfulness points his heart toward God." },
+              { title: "Ask for Brave Peace", desc: "Pray for courage without anger.", points: 4, next: "dp-questions", icon: "dove", badges: ["prayer", "brave"], feedback: "Brave peace is a beautiful kind of courage." },
+              { title: "Remember God's Past Help", desc: "Think about God's faithfulness before.", points: 3, next: "dp-questions", icon: "scroll", badges: ["brave"], feedback: "Remembering God's help steadies Daniel's trust." }
+            ]
+          },
+          {
+            id: "dp-questions",
+            progressStep: 5,
+            art: "palace",
+            title: "Questions and Truth",
+            text: "People ask Daniel about his prayer. Daniel answers honestly and respectfully. He does not speak harshly, because faithfulness can be humble.",
+            lesson: "Truth can be spoken with respect.",
+            choices: [
+              { title: "Answer With Respect", desc: "Tell the truth without being unkind.", points: 4, next: "dp-trust", icon: "truth", badges: ["brave", "listener"], feedback: "Daniel speaks truth with a respectful heart." },
+              { title: "Stay Peaceful", desc: "Let calm words lead the moment.", points: 3, next: "dp-trust", icon: "dove", badges: ["servant"], feedback: "Peaceful words keep Daniel's courage gentle." },
+              { title: "Pray Silently for Wisdom", desc: "Ask God to guide the next words.", points: 4, next: "dp-trust", icon: "prayer", badges: ["prayer", "listener"], feedback: "Daniel keeps listening for wisdom." }
+            ]
+          },
+          {
+            id: "dp-trust",
+            progressStep: 6,
+            art: "lionSilhouette",
+            title: "A Quiet Place of Trust",
+            text: "Daniel is taken to a place with friendly lion silhouettes in the distance. The scene is calm and not scary. Daniel trusts God through the night.",
+            lesson: "God can give peace in hard places.",
+            choices: [
+              { title: "Pray in the Quiet", desc: "Keep trusting God through the night.", points: 4, next: "dp-night", icon: "prayer", badges: ["prayer", "brave"], feedback: "Prayer helps Daniel rest in God's care." },
+              { title: "Remember God Is Near", desc: "Let truth quiet his heart.", points: 4, next: "dp-night", icon: "faith", badges: ["brave"], feedback: "Daniel remembers he is not alone." },
+              { title: "Wait With Patience", desc: "Choose calm trust while time passes.", points: 3, next: "dp-night", icon: "breath", badges: ["listener"], feedback: "Patient trust can be brave too." }
+            ]
+          },
+          {
+            id: "dp-night",
+            progressStep: 7,
+            art: "lionSilhouette",
+            title: "Peace Through the Night",
+            text: "The night is quiet. Daniel keeps trusting God, and the lions stay as gentle silhouettes. His courage is steady because his heart is turned toward the Lord.",
+            lesson: "Trust can stay peaceful while we wait.",
+            choices: [
+              { title: "Whisper a Thankful Prayer", desc: "Thank God for being near.", points: 4, next: "dp-morning", icon: "praise", badges: ["prayer"], feedback: "Thankful prayer keeps hope awake." },
+              { title: "Rest in God's Care", desc: "Choose peace instead of worry.", points: 4, next: "dp-morning", icon: "dove", badges: ["brave"], feedback: "Daniel rests with brave peace." },
+              { title: "Listen for Morning", desc: "Wait patiently for the new day.", points: 3, next: "dp-morning", icon: "question", badges: ["listener"], feedback: "Patient listening helps the night feel smaller." }
+            ]
+          },
+          {
+            id: "dp-morning",
+            progressStep: 8,
+            art: "danielMorning",
+            title: "Morning Peace",
+            text: "Morning comes, and Daniel is safe. The king is relieved, and Daniel gives God the praise. The story points to God's faithful care.",
+            lesson: "Every rescue is a reason to praise God.",
+            choices: [
+              { title: "Give God the Praise", desc: "Remember who cared for Daniel.", points: 4, next: "dp-celebration", icon: "praise", badges: ["prayer", "servant"], feedback: "Daniel gives God the glory with a thankful heart." },
+              { title: "Speak Peace to the King", desc: "Answer with respect and calm.", points: 3, next: "dp-celebration", icon: "dove", badges: ["listener"], feedback: "Daniel's words stay gentle and wise." },
+              { title: "Remember Faithful Prayer", desc: "Think about how prayer helped him trust.", points: 4, next: "dp-celebration", icon: "prayer", badges: ["prayer"], feedback: "Prayer helped Daniel stay faithful." }
+            ]
+          },
+          {
+            id: "dp-celebration",
+            progressStep: 9,
+            art: "celebration",
+            title: "Faithful and Brave",
+            text: "Daniel's story reminds God's people to pray faithfully and trust peacefully. Courage does not have to be loud. A prayerful heart can stay steady with God.",
+            lesson: "God helps us be faithful, wise, and brave.",
+            choices: [
+              { title: "Practice Prayer This Week", desc: "Choose a daily time to talk with God.", points: 4, next: "ending", icon: "prayer", badges: ["prayer"], feedback: "A prayer habit can help faith grow." },
+              { title: "Choose Brave Honesty", desc: "Tell the truth with a gentle heart.", points: 4, next: "ending", icon: "truth", badges: ["brave"], feedback: "Brave honesty can be gentle and kind." },
+              { title: "Encourage Someone to Trust", desc: "Share a peaceful reminder of God's care.", points: 3, next: "ending", icon: "help", badges: ["helpful"], feedback: "Encouragement can help another heart feel steady." }
+            ]
+          }
+        ],
+        endings: {
+          high: {
+            title: "Prayer Champion",
+            message: "You helped Daniel practice faithful prayer, wisdom, courage, and peaceful trust.",
+            blessing: "May prayer keep helping your heart remember that God is near."
+          },
+          medium: {
+            title: "Brave Heart",
+            message: "You made brave and thoughtful choices with Daniel. You practiced trust, honesty, and prayer.",
+            blessing: "God can grow steady courage in quiet moments."
+          },
+          low: {
+            title: "Learning Faithfulness",
+            message: "You walked through Daniel's story and learned that prayer can help us trust God.",
+            blessing: "Every prayer can be a new step of faithfulness."
+          }
+        }
+      },
+      noah: {
+        title: "Noah's Ark",
+        description: "A gentle story of listening, obedience, and care.",
+        passage: "Genesis 6-9",
+        available: false,
+        selectorArt: "ark"
+      },
+      esther: {
+        title: "Esther Saves Her People",
+        description: "A brave story of wisdom, courage, and speaking up.",
+        passage: "Esther 4-5",
+        available: false,
+        selectorArt: "crown"
+      },
+      jonah: {
+        title: "Jonah's Journey",
+        description: "A story about listening, mercy, and second chances.",
+        passage: "Jonah 1-4",
+        available: false,
+        selectorArt: "wave"
+      },
+      moses: {
+        title: "Moses and the Red Sea",
+        description: "A story of trust, courage, and God's faithful care.",
+        passage: "Exodus 14",
+        available: false,
+        selectorArt: "sea"
       }
     };
 
@@ -1419,7 +2305,9 @@
       faithPoints: 0,
       sceneNumber: 1,
       earnedBadges: new Set(),
-      acceptingChoice: true
+      acceptingChoice: true,
+      narrationEnabled: false,
+      speechSupported: "speechSynthesis" in window && "SpeechSynthesisUtterance" in window
     };
 
     const screens = {
@@ -1429,14 +2317,19 @@
     };
 
     const ui = {
-      storySelect: document.getElementById("storySelect"),
-      futureStories: document.getElementById("futureStories"),
-      startButton: document.getElementById("startButton"),
+      storyCards: document.getElementById("storyCards"),
       playAgainButton: document.getElementById("playAgainButton"),
       storyMenuButton: document.getElementById("storyMenuButton"),
+      readToggleButton: document.getElementById("readToggleButton"),
+      readStopButton: document.getElementById("readStopButton"),
+      parentNotesButton: document.getElementById("parentNotesButton"),
+      parentNotesPanel: document.getElementById("parentNotesPanel"),
+      adventureMap: document.getElementById("adventureMap"),
+      stickerPanel: document.getElementById("stickerPanel"),
       sceneTitle: document.getElementById("sceneTitle"),
       storyText: document.getElementById("storyText"),
       lessonBox: document.getElementById("lessonBox"),
+      choiceHeading: document.querySelector(".choice-heading"),
       choicesGrid: document.getElementById("choicesGrid"),
       feedback: document.getElementById("feedback"),
       scoreText: document.getElementById("scoreText"),
@@ -1461,44 +2354,61 @@
     document.getElementById("brandBadge").innerHTML = smallSvg("faithBadge");
     document.getElementById("scoreIcon").innerHTML = smallSvg("star");
     document.getElementById("kickerIcon").innerHTML = smallSvg("book");
-    document.getElementById("startIcon").innerHTML = smallSvg("play");
+    document.getElementById("readIcon").innerHTML = smallSvg("book");
+    document.getElementById("stopIcon").innerHTML = smallSvg("stop");
+    document.getElementById("notesIcon").innerHTML = smallSvg("notes");
     document.getElementById("againIcon").innerHTML = smallSvg("play");
     document.getElementById("menuIcon").innerHTML = smallSvg("book");
     document.getElementById("endingBadgeIcon").innerHTML = smallSvg("faithBadge");
     ui.heroArt.innerHTML = svgArt("hero");
 
     buildStorySelector();
+    setupNarration();
     updateScore();
 
-    ui.startButton.addEventListener("click", startGame);
-    ui.playAgainButton.addEventListener("click", startGame);
+    ui.playAgainButton.addEventListener("click", () => startGame(gameState.storyKey));
     ui.storyMenuButton.addEventListener("click", showStoryMenu);
+    ui.readToggleButton.addEventListener("click", toggleReadToMe);
+    ui.readStopButton.addEventListener("click", stopNarration);
+    ui.parentNotesButton.addEventListener("click", toggleParentNotes);
 
     function buildStorySelector() {
       Object.entries(stories).forEach(([key, story]) => {
-        const option = document.createElement("option");
-        option.value = key;
-        option.textContent = story.available ? story.title : `${story.title} (coming soon)`;
-        option.disabled = !story.available;
-        ui.storySelect.appendChild(option);
-      });
-
-      futureStories.forEach((title) => {
-        const item = document.createElement("li");
-        item.textContent = title;
-        ui.futureStories.appendChild(item);
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = `story-card${story.available ? "" : " is-coming"}`;
+        card.disabled = !story.available;
+        card.setAttribute("aria-label", story.available ? `Play ${story.title}` : `${story.title}, coming soon`);
+        card.innerHTML = `
+          <span class="story-card-art" aria-hidden="true">${storyCardArt(story.selectorArt)}</span>
+          <span>
+            <span class="story-card-title">${story.title}</span>
+            <span class="story-card-desc">${story.description || story.passage || "A Bible adventure for kids."}</span>
+            <span class="story-card-action">${story.available ? `${smallSvg("play")} Play Story` : "Coming Soon"}</span>
+          </span>
+        `;
+        if (story.available) {
+          card.addEventListener("click", () => startGame(key));
+        }
+        ui.storyCards.appendChild(card);
       });
     }
 
-    function startGame() {
-      gameState.storyKey = ui.storySelect.value;
+    function startGame(storyKey = gameState.storyKey) {
+      if (!stories[storyKey] || !stories[storyKey].available) return;
+      gameState.storyKey = storyKey;
       gameState.currentSceneId = stories[gameState.storyKey].scenes[0].id;
       gameState.faithPoints = 0;
       gameState.sceneNumber = 1;
       gameState.earnedBadges = new Set();
       gameState.acceptingChoice = true;
+      stopNarration();
+      ui.parentNotesPanel.classList.remove("open");
+      ui.parentNotesButton.classList.remove("is-on");
       clearToasts();
       updateScore();
+      renderStickerPanel();
+      renderParentNotes();
       showScreen("game");
       renderScene();
     }
@@ -1506,16 +2416,22 @@
     function showStoryMenu() {
       gameState.faithPoints = 0;
       gameState.earnedBadges = new Set();
+      stopNarration();
+      ui.parentNotesPanel.classList.remove("open");
+      ui.parentNotesButton.classList.remove("is-on");
       clearToasts();
       updateScore();
+      renderStickerPanel();
       showScreen("title");
-      ui.startButton.focus();
+      const firstStoryCard = ui.storyCards.querySelector(".story-card:not(.is-coming)");
+      if (firstStoryCard) firstStoryCard.focus();
     }
 
     function showScreen(name) {
       Object.values(screens).forEach((screen) => screen.classList.remove("active"));
       screens[name].classList.add("active");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
     }
 
     function getStory() {
@@ -1541,15 +2457,19 @@
       ui.storyText.textContent = scene.text;
       ui.lessonBox.innerHTML = `<span aria-hidden="true">${smallSvg("book")}</span><span>${scene.lesson}</span>`;
       ui.sceneArt.innerHTML = svgArt(scene.art);
+      ui.choiceHeading.textContent = story.choicePrompt || "What should you choose?";
       ui.feedback.textContent = "";
       ui.feedback.classList.remove("visible");
       ui.progressLabel.textContent = scene.sceneLabel || `Scene ${Math.ceil(progressStep)} of ${total}`;
       ui.progressPercent.textContent = `${progress}% complete`;
       ui.progressFill.style.width = `${progress}%`;
+      renderAdventureMap(story, scene, total);
+      renderStickerPanel();
       ui.gameCard.classList.remove("story-turn-out", "story-turn-in");
       void ui.gameCard.offsetWidth;
       ui.gameCard.classList.add("story-turn-in");
       window.setTimeout(() => ui.gameCard.classList.remove("story-turn-in"), 320);
+      if (gameState.narrationEnabled) speakCurrentScene();
 
       ui.choicesGrid.innerHTML = "";
       scene.choices.forEach((choice, choiceIndex) => {
@@ -1596,6 +2516,8 @@
       const newBadges = awardBadges(choice.badges);
       newBadges.forEach(showBadgeToast);
       updateScore();
+      renderStickerPanel();
+      cancelSpeech();
       ui.feedback.innerHTML = `<strong>Great choice!</strong> ${choice.feedback}`;
       ui.feedback.classList.add("visible");
 
@@ -1626,10 +2548,13 @@
       ui.progressPercent.textContent = `${progress}% complete`;
       ui.progressLabel.textContent = `Scene ${totalScenes} of ${totalScenes}`;
 
-      const ending = chooseEnding(story);
-      const isHighEnding = ending.title === "Giant Slayer of Faith";
+      const endingTier = chooseEndingTier(story);
+      const ending = story.endings[endingTier];
+      const isHighEnding = endingTier === "high";
       const earnedBadges = getEarnedBadges();
+      stopNarration();
       clearToasts();
+      renderStickerPanel();
       ui.gameCard.classList.remove("story-turn-out", "story-turn-in");
       ui.endingPanel.classList.toggle("ending-high", isHighEnding);
       ui.endingTitle.textContent = ending.title;
@@ -1649,10 +2574,143 @@
       ENDING TEXT:
       Adjust thresholds here if you change point values or scene count.
     */
+    function chooseEndingTier(story) {
+      const thresholds = story.endingThresholds || { high: 45, medium: 36 };
+      if (gameState.faithPoints >= thresholds.high) return "high";
+      if (gameState.faithPoints >= thresholds.medium) return "medium";
+      return "low";
+    }
+
     function chooseEnding(story) {
-      if (gameState.faithPoints >= 45) return story.endings.high;
-      if (gameState.faithPoints >= 36) return story.endings.medium;
-      return story.endings.low;
+      return story.endings[chooseEndingTier(story)];
+    }
+
+    function renderAdventureMap(story, scene, total) {
+      const locations = story.mapLocations || story.scenes.map((item, index) => ({
+        id: item.id,
+        label: item.title,
+        icon: index === story.scenes.length - 1 ? "trophy" : "path"
+      }));
+      const progressStep = scene.progressStep || gameState.sceneNumber;
+      const ratio = total > 1 ? Math.max(0, Math.min(1, (progressStep - 1) / (total - 1))) : 0;
+      const currentIndex = Math.min(locations.length - 1, Math.round(ratio * (locations.length - 1)));
+      const progressWidth = `${Math.round(ratio * 100)}%`;
+
+      ui.adventureMap.innerHTML = `
+        <div class="map-title">
+          <span>${escapeHtml(story.title)} Map</span>
+          <span>${escapeHtml(story.passage || "Bible story")}</span>
+        </div>
+        <div class="map-path" style="--map-count: ${locations.length}; --map-progress: ${progressWidth}; --marker-left: ${progressWidth};">
+          <span class="map-progress-line" aria-hidden="true"></span>
+          <span class="map-marker" aria-hidden="true">${smallSvg("faithBadge")}</span>
+          ${locations.map((location, index) => `
+            <span class="map-node ${index < currentIndex ? "completed" : ""} ${index === currentIndex ? "current" : ""}">
+              <span class="map-dot" aria-hidden="true">${choiceIcon(location.icon)}</span>
+              <span>${escapeHtml(location.label)}</span>
+            </span>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderStickerPanel() {
+      ui.stickerPanel.innerHTML = `
+        <h3>Sticker Book</h3>
+        <div class="sticker-grid">
+          ${Object.entries(badgeCatalog).map(([badge, details]) => {
+            const unlocked = gameState.earnedBadges.has(badge);
+            return `
+              <span class="sticker ${unlocked ? "unlocked" : "locked"}" title="${escapeHtml(details.note)}">
+                ${smallSvg(unlocked ? "faithBadge" : "lock")}
+                <span>${escapeHtml(details.title)}</span>
+              </span>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderParentNotes() {
+      const notes = getStory().parentNotes;
+      if (!notes) {
+        ui.parentNotesPanel.innerHTML = "";
+        return;
+      }
+      ui.parentNotesPanel.innerHTML = `
+        <h3>Parent Notes</h3>
+        <p><strong>Passage:</strong> ${escapeHtml(notes.passage)}</p>
+        <p><strong>Bible lesson:</strong> ${escapeHtml(notes.lesson)}</p>
+        <p><strong>Talk together:</strong></p>
+        <ul>
+          ${notes.questions.map((question) => `<li>${escapeHtml(question)}</li>`).join("")}
+        </ul>
+        <p><strong>Prayer:</strong> ${escapeHtml(notes.prayer)}</p>
+      `;
+    }
+
+    function toggleParentNotes() {
+      const willOpen = !ui.parentNotesPanel.classList.contains("open");
+      ui.parentNotesPanel.classList[willOpen ? "add" : "remove"]("open");
+      ui.parentNotesButton.classList[willOpen ? "add" : "remove"]("is-on");
+      ui.parentNotesButton.setAttribute("aria-expanded", String(willOpen));
+    }
+
+    function setupNarration() {
+      ui.parentNotesButton.setAttribute("aria-expanded", "false");
+      ui.readToggleButton.setAttribute("aria-pressed", "false");
+      if (!gameState.speechSupported) {
+        ui.readToggleButton.hidden = true;
+        ui.readStopButton.hidden = true;
+      }
+    }
+
+    function toggleReadToMe() {
+      if (!gameState.speechSupported) return;
+      gameState.narrationEnabled = !gameState.narrationEnabled;
+      setNarrationButtonState();
+      if (gameState.narrationEnabled) {
+        speakCurrentScene();
+      } else {
+        cancelSpeech();
+      }
+    }
+
+    function stopNarration() {
+      gameState.narrationEnabled = false;
+      cancelSpeech();
+      setNarrationButtonState();
+    }
+
+    function setNarrationButtonState() {
+      ui.readToggleButton.classList[gameState.narrationEnabled ? "add" : "remove"]("is-on");
+      ui.readToggleButton.setAttribute("aria-pressed", String(gameState.narrationEnabled));
+      ui.readStopButton.hidden = !gameState.narrationEnabled;
+    }
+
+    function cancelSpeech() {
+      if (gameState.speechSupported) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function speakCurrentScene() {
+      if (!gameState.speechSupported || !gameState.narrationEnabled) return;
+      const scene = getCurrentScene();
+      if (!scene) return;
+      cancelSpeech();
+      const utterance = new window.SpeechSynthesisUtterance(`${getStory().title}. ${scene.title}. ${scene.text} Bible lesson: ${scene.lesson}`);
+      utterance.rate = 0.92;
+      utterance.pitch = 1.03;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
     }
 
     function awardBadges(badges = []) {
@@ -1724,7 +2782,7 @@
       const toast = document.createElement("div");
       toast.className = "badge-toast";
       toast.dataset.badge = badge.badge;
-      toast.textContent = `🏅 ${badge.title} unlocked!`;
+      toast.innerHTML = `${smallSvg("faithBadge")}<span>${escapeHtml(badge.title)} unlocked!</span>`;
       ui.toastLayer.appendChild(toast);
       window.setTimeout(() => toast.remove(), 2500);
     }
@@ -1738,9 +2796,26 @@
         star: '<svg viewBox="0 0 24 24" width="22" height="22" role="img" aria-label=""><path fill="#f7a928" d="M12 2.5l2.7 5.48 6.05.88-4.38 4.27 1.03 6.02L12 16.3l-5.4 2.84 1.03-6.02-4.38-4.27 6.05-.88L12 2.5z"/></svg>',
         book: '<svg viewBox="0 0 24 24" width="22" height="22" role="img" aria-label=""><path fill="#6157cc" d="M5 4.2c2.35 0 4.22.5 5.6 1.5v14.1c-1.4-.92-3.25-1.38-5.6-1.38-.9 0-1.63-.73-1.63-1.63V5.83C3.37 4.93 4.1 4.2 5 4.2zm14 0c.9 0 1.63.73 1.63 1.63v10.96c0 .9-.73 1.63-1.63 1.63-2.35 0-4.2.46-5.6 1.38V5.7c1.38-1 3.25-1.5 5.6-1.5z"/></svg>',
         play: '<svg viewBox="0 0 24 24" width="22" height="22" role="img" aria-label=""><path fill="#237a48" d="M8.2 5.3c0-.82.9-1.32 1.58-.87l9 6c.62.41.62 1.33 0 1.74l-9 6c-.68.45-1.58-.04-1.58-.87v-12z"/></svg>',
+        stop: '<svg viewBox="0 0 24 24" width="22" height="22" role="img" aria-label=""><rect x="6" y="6" width="12" height="12" rx="3" fill="#6157cc"/></svg>',
+        notes: '<svg viewBox="0 0 24 24" width="22" height="22" role="img" aria-label=""><path d="M7 3.8h8.5L19 7.3v12.9H7z" fill="#fff7bd"/><path d="M15.5 3.8v4h4" fill="none" stroke="#8d5a32" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.4 10.4h6.4M9.4 13.7h6.4M9.4 17h4.6" stroke="#8d5a32" stroke-width="1.8" stroke-linecap="round"/></svg>',
+        lock: '<svg viewBox="0 0 64 64" width="34" height="34" role="img" aria-label=""><rect x="16" y="28" width="32" height="24" rx="8" fill="#dbe7f3"/><path d="M22 28v-7c0-7 4.5-12 10-12s10 5 10 12v7" fill="none" stroke="#7c8798" stroke-width="6" stroke-linecap="round"/><circle cx="32" cy="40" r="4" fill="#7c8798"/></svg>',
         faithBadge: '<svg viewBox="0 0 64 64" width="34" height="34" role="img" aria-label=""><circle cx="32" cy="32" r="27" fill="#fff7bd"/><path fill="#45b66b" d="M32 10l5.8 11.8 13 1.9-9.4 9.2 2.2 13-11.6-6.1-11.6 6.1 2.2-13-9.4-9.2 13-1.9L32 10z"/><path fill="#fff" d="M31 21h3v17h-3z"/><path fill="#fff" d="M25 27h15v3H25z"/></svg>'
       };
       return map[type] || map.star;
+    }
+
+    function storyCardArt(type) {
+      const cards = {
+        david: choiceIcon("sheep"),
+        lostSheep: choiceIcon("sheep"),
+        samaritan: choiceIcon("help"),
+        daniel: choiceIcon("prayer"),
+        ark: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e9f8ff"/><path d="M14 48h52l-9 14H23z" fill="#8d5a32"/><path d="M27 36h26v12H27z" fill="#c98645"/><path d="M24 30c11-11 21-11 32 0" fill="none" stroke="#45b66b" stroke-width="5" stroke-linecap="round"/><path d="M19 62c15-8 27-3 42-8" fill="none" stroke="#86d9ff" stroke-width="5" stroke-linecap="round"/></svg>',
+        crown: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff7d9"/><path d="M18 55l6-31 16 18 16-18 6 31z" fill="#ffd86b"/><path d="M22 58h36" stroke="#8d5a32" stroke-width="6" stroke-linecap="round"/><circle cx="24" cy="24" r="5" fill="#ef5f8d"/><circle cx="56" cy="24" r="5" fill="#6157cc"/></svg>',
+        wave: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e9f8ff"/><path d="M12 52c16-20 33-18 52 0-15-6-24-2-34 6-6 5-13 5-18-6z" fill="#86d9ff"/><circle cx="54" cy="24" r="12" fill="#ffd86b"/></svg>',
+        sea: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e9f8ff"/><path d="M13 58c12-9 24-9 36 0s18 8 25 2" fill="none" stroke="#86d9ff" stroke-width="8" stroke-linecap="round"/><path d="M24 48c9-6 18-6 27 0" fill="none" stroke="#6157cc" stroke-width="6" stroke-linecap="round"/><path d="M20 22h40" stroke="#ffd86b" stroke-width="7" stroke-linecap="round"/></svg>'
+      };
+      return cards[type] || choiceIcon("spark");
     }
 
     /*
@@ -1817,6 +2892,7 @@
       const stones = '<g fill="#8f9ab3"><ellipse cx="240" cy="366" rx="22" ry="13"/><ellipse cx="282" cy="354" rx="20" ry="12"/><ellipse cx="324" cy="370" rx="24" ry="13"/><ellipse cx="368" cy="356" rx="19" ry="11"/><ellipse cx="411" cy="372" rx="23" ry="13"/></g>';
 
       const giant = '<g transform="translate(456 164)" opacity=".84"><ellipse cx="0" cy="-66" rx="34" ry="38" fill="#5f6d83"/><path d="M-42-22h84l28 190h-140z" fill="#6f7f98"/><path d="M-58 6c-36 34-47 77-30 125M58 6c36 34 47 77 30 125" fill="none" stroke="#6f7f98" stroke-width="20" stroke-linecap="round"/><path d="M-25 166v82M25 166v82" stroke="#4c5a70" stroke-width="21" stroke-linecap="round"/><path d="M-43 249h37M12 249h39" stroke="#3d4766" stroke-width="15" stroke-linecap="round"/></g>';
+      const lion = '<g transform="translate(430 326)" opacity=".68" fill="#7b85a6"><ellipse cx="0" cy="0" rx="70" ry="32"/><circle cx="-46" cy="-23" r="32"/><circle cx="-63" cy="-54" r="10"/><circle cx="-28" cy="-55" r="10"/><path d="M50-6c31-26 51-23 67 10" fill="none" stroke="#7b85a6" stroke-width="12" stroke-linecap="round"/><path d="M-30 26v36M28 27v36" stroke="#5f6d83" stroke-width="12" stroke-linecap="round"/></g>';
 
       const trophy = '<g transform="translate(310 212)"><path d="M-60-60h120v46c0 41-25 70-60 70s-60-29-60-70z" fill="#ffd86b"/><path d="M-72-40h-45c0 49 30 75 71 75M72-40h45c0 49-30 75-71 75" fill="none" stroke="#f7a928" stroke-width="16" stroke-linecap="round"/><path d="M0 56v54M-38 110h76M-62 138H62" stroke="#8d5a32" stroke-width="16" stroke-linecap="round"/><path d="M0-36l12 25 28 4-20 19 5 28L0 27l-25 13 5-28-20-19 28-4z" fill="#fff7bd"/></g>';
       const sparkles = '<g class="soft-sparkles" fill="#fff7bd"><path d="M92 320l5 10 10 5-10 5-5 10-5-10-10-5 10-5z"/><circle cx="468" cy="330" r="6"/><circle cx="518" cy="292" r="5"/></g>';
@@ -1840,6 +2916,22 @@
         streamPrayer: `${baseStart}<rect width="620" height="470" rx="28" fill="#dff5ff"/><circle cx="86" cy="78" r="44" fill="#ffd86b"/>${clouds}<path d="M0 340c114-38 211-36 316 6 104 41 196 29 304-20v144H0z" fill="#aee9a4"/>${stream}<g class="david-motion david-pray"><g transform="translate(302 296) scale(.84)"><circle cx="0" cy="-62" r="22" fill="#f1b47a"/><path d="M-20-68c8-21 34-21 42 0-14-5-28-5-42 0z" fill="#6b3b24"/><path d="M-27-32h54l13 80h-80z" fill="#ef5f8d"/><path d="M-21-15c10 12 15 26 14 44M21-15c-10 12-15 26-14 44" fill="none" stroke="#f1b47a" stroke-width="9" stroke-linecap="round"/></g></g>${stones}<path d="M340 192c19-23 47-23 66 0" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/>${end}`,
         valley: `${baseStart}${sky}${clouds}<path d="M0 350c122-50 196-42 314 5 91 36 189 34 306-8v123H0z" fill="#aee9a4"/>${flag}${giant}${david(148,329,.75,"david-step")}<path d="M165 321c53-12 102-4 151 24" fill="none" stroke="#8d5a32" stroke-width="7" stroke-linecap="round"/><circle cx="312" cy="344" r="7" fill="#8f9ab3"/>${grass}${end}`,
         celebration: `${baseStart}<rect width="620" height="470" rx="28" fill="#dff5ff"/><circle class="sun-glow" cx="94" cy="78" r="44" fill="#ffd86b"/><path d="M0 338c98-50 202-50 302-5 108 48 203 42 318-5v142H0z" fill="#87d77a"/>${trophy}${david(118,329,.75,"david-walk")}<g class="soft-sparkles" fill="#ef5f8d"><circle cx="470" cy="98" r="9"/><circle cx="510" cy="150" r="7"/><circle cx="420" cy="165" r="6"/></g><g class="soft-sparkles" fill="#6157cc"><circle cx="170" cy="104" r="7"/><circle cx="216" cy="152" r="6"/><circle cx="548" cy="88" r="8"/></g>${end}`,
+        lostVillage: `${baseStart}${sky}${clouds}${tent(388,276,"#ffd86b")}${sheep(128,360,1)}${sheep(214,378,.78)}${david(302,314,.76,"david-walk")}${grass}${end}`,
+        lostHills: `${baseStart}${sky}${clouds}${sheep(466,344,.88)}${sheep(142,376,.76)}${david(292,306,.8,"david-step")}<path d="M315 321c54-18 105-10 154 24" fill="none" stroke="#8d5a32" stroke-width="7" stroke-linecap="round"/>${grass}${end}`,
+        lostSheepFound: `${baseStart}${sky}${clouds}${sheep(362,346,1.12)}${david(246,316,.8,"david-step")}<path d="M274 338c28 16 54 17 80 4" fill="none" stroke="#8d5a32" stroke-width="7" stroke-linecap="round"/>${sparkles}${grass}${end}`,
+        lostHome: `${baseStart}${sky}${clouds}${tent(384,278,"#ffd86b")}${tent(472,292,"#8be980")}${sheep(322,360,1.06)}${david(214,321,.78,"david-carry")}${sparkles}${grass}${end}`,
+        samaritanRoad: `${baseStart}${sky}${clouds}<path d="M184 470c-12-78 34-150 132-218" fill="none" stroke="#d7a15e" stroke-width="52" stroke-linecap="round"/><path d="M204 470c-6-64 36-128 122-187" fill="none" stroke="#fff0ba" stroke-width="24" stroke-linecap="round"/>${david(326,318,.78,"david-travel")}${grass}${end}`,
+        neighborRoad: `${baseStart}${sky}${clouds}<path d="M116 470c16-76 66-139 151-188" fill="none" stroke="#d7a15e" stroke-width="48" stroke-linecap="round"/>${david(340,318,.78,"david-step")}<g transform="translate(210 356) scale(.64)" opacity=".88"><circle cx="0" cy="-50" r="18" fill="#d79561"/><path d="M-34-25h68l10 58h-88z" fill="#7b85a6"/></g>${sparkles}${end}`,
+        neighborCare: `${baseStart}${sky}${clouds}<path d="M135 470c20-70 78-126 172-171" fill="none" stroke="#d7a15e" stroke-width="48" stroke-linecap="round"/>${basket(274,366,.56)}${david(346,318,.78,"david-step")}<g transform="translate(210 362) scale(.62)" opacity=".88"><circle cx="0" cy="-50" r="18" fill="#d79561"/><path d="M-34-25h68l10 58h-88z" fill="#7b85a6"/></g>${sparkles}${end}`,
+        inn: `${baseStart}${sky}${clouds}${tent(230,282,"#ffd86b")}${tent(392,292,"#8be980")}${david(318,326,.76,"david-step")}${basket(206,374,.52)}${grass}${end}`,
+        innCare: `${baseStart}<rect width="620" height="470" rx="28" fill="#e9f5ff"/><circle class="sun-glow" cx="92" cy="82" r="42" fill="#ffd86b"/><path d="M0 338c98-36 190-34 280-1 117 43 216 37 340-13v146H0z" fill="#aee9a4"/>${tent(330,260,"#ffd86b")}${david(238,326,.74,"david-step")}${basket(396,374,.52)}${sparkles}${end}`,
+        generosity: `${baseStart}${sky}${clouds}${basket(310,286,1.48)}${david(182,322,.76,"david-step")}<g class="soft-sparkles" fill="#ffd86b"><circle cx="420" cy="182" r="8"/><circle cx="460" cy="238" r="6"/><circle cx="220" cy="178" r="7"/></g>${grass}${end}`,
+        village: `${baseStart}${sky}${clouds}${tent(210,286,"#ffd86b")}${tent(390,292,"#8be980")}${david(302,326,.76,"david-walk")}${sparkles}${grass}${end}`,
+        danielRoom: `${baseStart}<rect width="620" height="470" rx="28" fill="#e9f5ff"/><circle class="sun-glow" cx="98" cy="86" r="40" fill="#ffd86b"/><path d="M420 80h95v190h-95z" fill="#dff5ff"/><path d="M420 160h95M468 80v190" stroke="#8d5a32" stroke-width="8"/><path d="M0 338h620v132H0z" fill="#aee9a4"/>${david(296,326,.78,"david-pray")}${sparkles}${end}`,
+        palace: `${baseStart}<rect width="620" height="470" rx="28" fill="#e9f5ff"/><path d="M0 338h620v132H0z" fill="#aee9a4"/><path d="M112 106h396l-42 230H154z" fill="#ffd86b"/><path d="M154 336L310 106l156 230z" fill="#fff0ba" opacity=".66"/><path d="M112 106h396" stroke="#8d5a32" stroke-width="12" stroke-linecap="round"/>${david(274,326,.74,"david-step")}${end}`,
+        danielWindow: `${baseStart}<rect width="620" height="470" rx="28" fill="#e9f5ff"/><circle class="sun-glow" cx="92" cy="76" r="40" fill="#ffd86b"/><path d="M382 80h112v206H382z" fill="#dff5ff"/><path d="M382 150h112M438 80v206" stroke="#8d5a32" stroke-width="8"/><path d="M0 338h620v132H0z" fill="#aee9a4"/>${david(276,326,.78,"david-pray")}<path d="M306 228c22-22 50-22 72 0" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/>${end}`,
+        lionSilhouette: `${baseStart}<rect width="620" height="470" rx="28" fill="#e9f5ff"/><circle cx="94" cy="80" r="42" fill="#ffd86b"/><path d="M0 338c110-39 202-36 306 2 105 38 194 28 314-18v148H0z" fill="#aee9a4"/>${lion}${david(194,326,.76,"david-pray")}<path d="M226 226c21-22 48-22 69 0" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/>${end}`,
+        danielMorning: `${baseStart}${sky}${clouds}<path d="M0 338c108-44 204-40 310-2 105 38 194 32 310-11v145H0z" fill="#8be980"/>${lion}${david(188,326,.78,"david-walk")}${sparkles}${grass}${end}`,
         ending: `${baseStart}<rect width="620" height="470" rx="28" fill="#dff5ff"/><circle class="sun-glow" cx="86" cy="78" r="44" fill="#ffd86b"/><path d="M0 344c106-44 196-40 300-1 112 42 202 36 320-8v135H0z" fill="#8be980"/>${trophy}${shield(143,337,.58)}${helmet(476,336,.58)}<g class="soft-sparkles" fill="#ef5f8d"><circle cx="454" cy="105" r="8"/><circle cx="512" cy="158" r="7"/><circle cx="180" cy="150" r="7"/></g>${end}`,
         endingHigh: `${baseStart}<rect width="620" height="470" rx="28" fill="#dff5ff"/><circle class="sun-glow" cx="86" cy="78" r="44" fill="#ffd86b"/><path d="M0 344c106-44 196-40 300-1 112 42 202 36 320-8v135H0z" fill="#8be980"/>${confetti}${trophy}${shield(143,337,.58)}${helmet(476,336,.58)}<g class="soft-sparkles" fill="#ef5f8d"><circle cx="454" cy="105" r="8"/><circle cx="512" cy="158" r="7"/><circle cx="180" cy="150" r="7"/></g>${end}`
       };
@@ -1876,6 +2968,8 @@
         target: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#ecebff"/><circle cx="40" cy="40" r="28" fill="#fff"/><circle cx="40" cy="40" r="19" fill="#9189ff"/><circle cx="40" cy="40" r="9" fill="#6157cc"/><path d="M51 29l13-13" stroke="#ef5f8d" stroke-width="5" stroke-linecap="round"/></svg>',
         flag: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e7f8e9"/><path d="M25 66V16" stroke="#8d5a32" stroke-width="6" stroke-linecap="round"/><path d="M28 18h35l-8 13 8 13H28z" fill="#45b66b"/></svg>',
         praise: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff7d9"/><path d="M40 12l7 17 18 2-13 12 4 18-16-9-16 9 4-18-13-12 18-2z" fill="#ffd86b"/><path d="M40 25v18M32 34h16" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>',
+        servant: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e7f8e9"/><circle cx="40" cy="24" r="11" fill="#f1b47a"/><path d="M24 45h32l7 24H17z" fill="#45b66b"/><path d="M24 46c-8 6-12 12-13 20M56 46c8 6 12 12 13 20" fill="none" stroke="#f1b47a" stroke-width="7" stroke-linecap="round"/><path d="M30 55h20" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>',
+        sun: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff7d9"/><circle cx="40" cy="40" r="17" fill="#ffd86b"/><path d="M40 12v10M40 58v10M12 40h10M58 40h10M20 20l7 7M53 53l7 7M60 20l-7 7M27 53l-7 7" stroke="#f7a928" stroke-width="6" stroke-linecap="round"/></svg>',
         trophy: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff7d9"/><path d="M27 16h26v17c0 13-6 21-13 23-7-2-13-10-13-23z" fill="#ffd86b"/><path d="M25 22H14c1 17 9 24 20 25M55 22h11c-1 17-9 24-20 25" fill="none" stroke="#f7a928" stroke-width="6" stroke-linecap="round"/><path d="M40 56v10M28 67h24" stroke="#8d5a32" stroke-width="6" stroke-linecap="round"/></svg>'
       };
       return common[type] || common.spark;
