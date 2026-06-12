@@ -5,14 +5,1881 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Choose Your Bible Adventure</title>
   <style>
-    body { font-family: system-ui, sans-serif; background:#e5f7ff; color:#21304a; margin:0; padding:2rem; }
-    main { max-width: 720px; margin:auto; background:#fff; border-radius:24px; padding:2rem; box-shadow:0 18px 42px rgba(49,74,112,.18); }
+    /*
+      COLORS: Edit these custom properties to retheme the game.
+      CARD DESIGNS: Choice-card styles are grouped under ".choice-card".
+    */
+    :root {
+      --sky: #e5f7ff;
+      --sky-deep: #9bdcff;
+      --mint: #dff8dc;
+      --leaf: #45b66b;
+      --leaf-dark: #237a48;
+      --sun: #ffd86b;
+      --sun-deep: #f7a928;
+      --berry: #ef5f8d;
+      --berry-dark: #b72f66;
+      --plum: #6157cc;
+      --ink: #21304a;
+      --muted: #5f6d83;
+      --cream: #fff9eb;
+      --card: #ffffff;
+      --line: rgba(33, 48, 74, 0.13);
+      --shadow: 0 18px 42px rgba(49, 74, 112, 0.18);
+      --soft-shadow: 0 10px 22px rgba(49, 74, 112, 0.14);
+      --radius: 26px;
+      --focus: #1d6fff;
+      font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: linear-gradient(180deg, var(--sky), #f9fff5 58%, #fff2d4);
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255, 216, 107, 0.45), transparent 22rem),
+        radial-gradient(circle at 88% 16%, rgba(97, 87, 204, 0.13), transparent 20rem),
+        linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0));
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    .game-shell {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 18px 14px 32px;
+    }
+
+    .top-bar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 46px;
+      height: 46px;
+      flex: 0 0 auto;
+      border-radius: 15px;
+      box-shadow: var(--soft-shadow);
+      background: linear-gradient(145deg, #fff7bd, #ffb84a);
+      display: grid;
+      place-items: center;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.15rem, 4vw, 2.05rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .score-pill {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 120px;
+      padding: 10px 13px;
+      border-radius: 999px;
+      color: #14213a;
+      background: linear-gradient(145deg, #ffffff, #fff0ba);
+      border: 2px solid rgba(255, 185, 65, 0.55);
+      box-shadow: var(--soft-shadow);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .score-pill.score-pulse {
+      animation: score-pulse 620ms ease;
+    }
+
+    .point-pop {
+      position: absolute;
+      right: 4px;
+      top: 100%;
+      z-index: 20;
+      margin-top: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: #4d3500;
+      background: linear-gradient(145deg, #fff8d8, #ffd86b);
+      border: 1px solid rgba(247, 169, 40, 0.36);
+      box-shadow: 0 10px 22px rgba(49, 74, 112, 0.17);
+      font-size: 0.86rem;
+      font-weight: 900;
+      pointer-events: none;
+      white-space: nowrap;
+      animation: point-pop 980ms ease forwards;
+    }
+
+    .toast-layer {
+      position: fixed;
+      z-index: 50;
+      top: 76px;
+      left: 50%;
+      width: min(92vw, 430px);
+      display: grid;
+      gap: 8px;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .badge-toast {
+      justify-self: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      color: #273d2d;
+      background: linear-gradient(145deg, #ffffff, #fff7d9);
+      border: 1px solid rgba(69, 182, 107, 0.28);
+      box-shadow: 0 15px 32px rgba(49, 74, 112, 0.18);
+      font-weight: 900;
+      animation: toast-unlock 2400ms ease forwards;
+    }
+
+    main {
+      position: relative;
+    }
+
+    .screen {
+      display: none;
+      animation: lift-in 260ms ease both;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes lift-in {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero {
+      overflow: hidden;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.94), rgba(236,250,255,0.88)),
+        linear-gradient(180deg, #e5f7ff, #dff8dc);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.82);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .hero-copy {
+      padding: clamp(20px, 6vw, 52px);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #e7f8e9;
+      color: var(--leaf-dark);
+      font-weight: 800;
+      font-size: 0.9rem;
+      border: 1px solid rgba(69, 182, 107, 0.25);
+    }
+
+    .hero h2 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 9vw, 4.6rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+      max-width: 12ch;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      line-height: 1.6;
+      max-width: 62ch;
+    }
+
+    .hero-art {
+      min-height: 270px;
+      padding: 0 12px 16px;
+      align-self: end;
+    }
+
+    .hero-art svg,
+    .scene-art svg,
+    .ending-art svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .start-panel {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .story-picker,
+    .how-to {
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: var(--soft-shadow);
+      border: 1px solid rgba(255,255,255,0.78);
+      padding: 18px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .section-heading h3 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .story-select {
+      width: 100%;
+      min-height: 52px;
+      padding: 10px 12px;
+      border: 2px solid rgba(97, 87, 204, 0.25);
+      border-radius: 17px;
+      color: var(--ink);
+      background: #fff;
+      font-weight: 800;
+    }
+
+    .future-stories {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .future-stories li {
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: #536174;
+      background: #f0f4fb;
+      font-size: 0.87rem;
+      font-weight: 700;
+    }
+
+    .how-to-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .how-to-list li {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .mini-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background: linear-gradient(145deg, #fff7bd, #ffd569);
+      box-shadow: 0 5px 12px rgba(247, 169, 40, 0.22);
+      font-weight: 900;
+    }
+
+    .primary-action,
+    .secondary-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 58px;
+      margin-top: 16px;
+      border: 0;
+      border-radius: 21px;
+      font-weight: 900;
+      color: #112239;
+      cursor: pointer;
+      touch-action: manipulation;
+      box-shadow: 0 12px 24px rgba(35, 122, 72, 0.22);
+      transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+    }
+
+    .primary-action {
+      background: linear-gradient(145deg, #8be980, #ffd86b);
+    }
+
+    .secondary-action {
+      background: linear-gradient(145deg, #ffffff, #e4f3ff);
+      border: 2px solid rgba(97, 87, 204, 0.22);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .primary-action:hover,
+    .secondary-action:hover,
+    .choice-card:hover {
+      transform: translateY(-4px);
+      filter: saturate(1.04);
+    }
+
+    .primary-action:active,
+    .secondary-action:active,
+    .choice-card:active {
+      transform: translateY(2px) scale(0.965);
+    }
+
+    :focus-visible {
+      outline: 4px solid var(--focus);
+      outline-offset: 4px;
+    }
+
+    .game-card {
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.8);
+      overflow: hidden;
+    }
+
+    .game-card.story-turn-out .scene-layout {
+      animation: story-turn-out 260ms ease forwards;
+    }
+
+    .game-card.story-turn-in .scene-layout {
+      animation: story-turn-in 280ms ease both;
+    }
+
+    .progress-wrap {
+      padding: 16px 16px 0;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .progress-track {
+      height: 16px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e8eef8;
+      border: 1px solid rgba(33, 48, 74, 0.08);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--leaf), var(--sun));
+      transition: width 260ms ease;
+    }
+
+    .scene-layout {
+      display: grid;
+      gap: 0;
+    }
+
+    .scene-art {
+      padding: 10px 12px 0;
+      background: linear-gradient(180deg, #effbff, #fff9eb 80%);
+    }
+
+    .scene-body {
+      padding: 18px;
+    }
+
+    .scene-title {
+      margin: 0 0 8px;
+      font-size: clamp(1.75rem, 7vw, 3.1rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .story-text {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.62;
+    }
+
+    .lesson-box {
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 10px;
+      align-items: start;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 19px;
+      background: linear-gradient(145deg, #fff7d9, #eefbee);
+      border: 1px solid rgba(247, 169, 40, 0.22);
+      color: #38513a;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .choice-heading {
+      margin: 20px 0 10px;
+      font-size: 1.1rem;
+    }
+
+    .choices-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    /*
+      PREMIUM CHOICE CARDS:
+      These are real buttons for accessibility, styled as large touch cards.
+    */
+    .choice-card {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 68px 1fr;
+      gap: 12px;
+      width: 100%;
+      min-height: 112px;
+      padding: 14px;
+      text-align: left;
+      border: 2px solid rgba(255, 255, 255, 0.82);
+      border-radius: 24px;
+      color: var(--ink);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.96), rgba(231,248,233,0.92)),
+        var(--card);
+      box-shadow: 0 12px 24px rgba(49, 74, 112, 0.13);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, filter 150ms ease;
+      animation: card-idle 5.2s ease-in-out infinite;
+    }
+
+    .choice-card:nth-child(2) {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.96), rgba(255,239,188,0.9)),
+        var(--card);
+      animation-delay: 240ms;
+    }
+
+    .choice-card:nth-child(3) {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.96), rgba(232,231,255,0.9)),
+        var(--card);
+      animation-delay: 480ms;
+    }
+
+    .choice-card::after {
+      content: "";
+      position: absolute;
+      inset: -60% -70%;
+      background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.72) 50%, transparent 66%);
+      opacity: 0;
+      transform: translateX(-34%) rotate(8deg);
+      transition: opacity 180ms ease, transform 420ms ease;
+      pointer-events: none;
+    }
+
+    .choice-card:hover {
+      box-shadow: 0 17px 32px rgba(49, 74, 112, 0.19);
+      border-color: rgba(255, 216, 107, 0.95);
+    }
+
+    .choice-card:hover::after {
+      opacity: 1;
+      transform: translateX(34%) rotate(8deg);
+    }
+
+    .choice-card.selected {
+      border-color: rgba(255, 216, 107, 1);
+      box-shadow: 0 0 0 6px rgba(255, 216, 107, 0.28), 0 20px 36px rgba(49, 74, 112, 0.2);
+      animation: selected-card-glow 780ms ease both;
+    }
+
+    .choice-card[disabled] {
+      cursor: wait;
+      opacity: 0.78;
+      transform: none;
+    }
+
+    .choice-card[disabled]:not(.selected) {
+      animation: none;
+    }
+
+    .choice-card.selected[disabled] {
+      opacity: 1;
+      cursor: default;
+    }
+
+    .choice-icon {
+      width: 68px;
+      height: 68px;
+      align-self: center;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.55);
+      display: grid;
+      place-items: center;
+    }
+
+    .choice-icon svg {
+      width: 60px;
+      height: 60px;
+      display: block;
+    }
+
+    .choice-copy {
+      min-width: 0;
+    }
+
+    .choice-topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .choice-title {
+      display: block;
+      font-size: 1.04rem;
+      line-height: 1.18;
+      font-weight: 900;
+    }
+
+    .points-badge {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 30px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: #5e3c00;
+      background: #fff2ba;
+      border: 1px solid rgba(247, 169, 40, 0.32);
+      font-weight: 900;
+      font-size: 0.82rem;
+    }
+
+    .choice-desc {
+      display: block;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.38;
+    }
+
+    .feedback {
+      min-height: 54px;
+      margin-top: 16px;
+      padding: 13px 15px;
+      border-radius: 19px;
+      color: #2c4f37;
+      background: #eaf9ea;
+      border: 1px solid rgba(69, 182, 107, 0.24);
+      font-weight: 800;
+      line-height: 1.45;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .feedback.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .feedback strong {
+      color: var(--leaf-dark);
+    }
+
+    .ending-panel {
+      position: relative;
+      display: grid;
+      gap: 16px;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.93);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.82);
+    }
+
+    .ending-panel.ending-high {
+      box-shadow: 0 20px 48px rgba(247, 169, 40, 0.2), var(--shadow);
+    }
+
+    .ending-copy {
+      padding: 18px;
+    }
+
+    .ending-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: var(--berry-dark);
+      background: #fff0f5;
+      font-weight: 900;
+    }
+
+    .ending-copy h2 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 8vw, 4rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .ending-copy p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .score-summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 13px;
+      border-radius: 999px;
+      color: #4d3500;
+      background: linear-gradient(145deg, #fff8d8, #ffe084);
+      border: 1px solid rgba(247, 169, 40, 0.34);
+      font-weight: 900;
+    }
+
+    .badge-summary {
+      display: grid;
+      gap: 10px;
+      margin: 14px 0;
+      padding: 14px;
+      border-radius: 21px;
+      background: linear-gradient(145deg, #ffffff, #eefbee);
+      border: 1px solid rgba(69, 182, 107, 0.2);
+    }
+
+    .badge-summary h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .badge-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .virtue-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      color: #273d2d;
+      background: #fff;
+      border: 1px solid rgba(69, 182, 107, 0.25);
+      box-shadow: 0 7px 16px rgba(49, 74, 112, 0.1);
+      font-size: 0.9rem;
+      font-weight: 900;
+    }
+
+    .badge-summary.reveal .virtue-badge {
+      animation: badge-reveal 520ms ease both;
+      animation-delay: calc(var(--badge-order, 0) * 90ms);
+    }
+
+    .badge-note {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .david-motion,
+    .song-note,
+    .stream-shimmer,
+    .cloud-drift,
+    .sun-glow,
+    .sheep-bob,
+    .soft-sparkles,
+    .grass-wave,
+    .flag-wave,
+    .confetti-piece {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .david-walk,
+    .david-carry,
+    .david-travel,
+    .david-enter,
+    .david-step {
+      animation: david-walk 3.4s ease-in-out infinite;
+    }
+
+    .david-carry {
+      animation-name: david-carry;
+    }
+
+    .david-travel {
+      animation-duration: 3s;
+    }
+
+    .david-enter,
+    .david-step {
+      animation-name: david-step;
+    }
+
+    .david-pray {
+      animation: david-pray 3.6s ease-in-out infinite;
+    }
+
+    .song-note {
+      animation: note-float 3.2s ease-in-out infinite;
+    }
+
+    .stream-shimmer {
+      animation: stream-shimmer 3.8s ease-in-out infinite;
+    }
+
+    .cloud-drift {
+      animation: cloud-drift 10s ease-in-out infinite;
+    }
+
+    .sun-glow {
+      animation: sun-glow 4.8s ease-in-out infinite;
+    }
+
+    .sheep-bob {
+      animation: sheep-bob 4.6s ease-in-out infinite;
+    }
+
+    .soft-sparkles {
+      animation: sparkle-twinkle 2.8s ease-in-out infinite;
+    }
+
+    .grass-wave,
+    .flag-wave {
+      animation: grass-wave 3.8s ease-in-out infinite;
+    }
+
+    .confetti-piece {
+      animation: confetti-fall 2.6s ease-in-out infinite;
+    }
+
+    .confetti-piece:nth-child(2n) {
+      animation-delay: 180ms;
+    }
+
+    .confetti-piece:nth-child(3n) {
+      animation-delay: 360ms;
+    }
+
+    @keyframes score-pulse {
+      0%, 100% { box-shadow: var(--soft-shadow); transform: scale(1); }
+      48% { box-shadow: 0 0 0 8px rgba(255, 216, 107, 0.35), 0 14px 28px rgba(247, 169, 40, 0.24); transform: scale(1.045); }
+    }
+
+    @keyframes point-pop {
+      0% { opacity: 0; transform: translateY(8px) scale(0.92); }
+      18% { opacity: 1; transform: translateY(-4px) scale(1.03); }
+      100% { opacity: 0; transform: translateY(-36px) scale(0.98); }
+    }
+
+    @keyframes toast-unlock {
+      0% { opacity: 0; transform: translateY(-10px) scale(0.94); }
+      14%, 78% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-8px) scale(0.98); }
+    }
+
+    @keyframes story-turn-out {
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(-12px); }
+    }
+
+    @keyframes story-turn-in {
+      from { opacity: 0; transform: translateX(14px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes card-idle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+
+    @keyframes selected-card-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 216, 107, 0), 0 12px 24px rgba(49, 74, 112, 0.13); }
+      42% { box-shadow: 0 0 0 7px rgba(255, 216, 107, 0.34), 0 20px 36px rgba(49, 74, 112, 0.2); }
+    }
+
+    @keyframes badge-reveal {
+      from { opacity: 0; transform: translateY(8px) scale(0.94); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes david-walk {
+      0%, 100% { transform: translate(0, 0); }
+      45% { transform: translate(9px, -2px); }
+      70% { transform: translate(4px, 1px); }
+    }
+
+    @keyframes david-carry {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(6px, -2px) rotate(-1deg); }
+    }
+
+    @keyframes david-step {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(12px, -1px); }
+    }
+
+    @keyframes david-pray {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(4px); }
+    }
+
+    @keyframes note-float {
+      0%, 100% { transform: translateY(0); opacity: 0.75; }
+      50% { transform: translateY(-10px); opacity: 1; }
+    }
+
+    @keyframes stream-shimmer {
+      0%, 100% { opacity: 0.55; transform: translateX(0); }
+      50% { opacity: 0.95; transform: translateX(10px); }
+    }
+
+    @keyframes cloud-drift {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(10px); }
+    }
+
+    @keyframes sun-glow {
+      0%, 100% { filter: drop-shadow(0 0 0 rgba(255, 216, 107, 0)); transform: scale(1); }
+      50% { filter: drop-shadow(0 0 10px rgba(255, 216, 107, 0.72)); transform: scale(1.035); }
+    }
+
+    @keyframes sheep-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    @keyframes sparkle-twinkle {
+      0%, 100% { opacity: 0.35; transform: scale(0.92); }
+      50% { opacity: 1; transform: scale(1.06); }
+    }
+
+    @keyframes grass-wave {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    @keyframes confetti-fall {
+      0%, 100% { opacity: 0.55; transform: translateY(0) rotate(0deg); }
+      50% { opacity: 1; transform: translateY(9px) rotate(10deg); }
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (min-width: 640px) {
+      .game-shell {
+        padding: 24px 22px 42px;
+      }
+
+      .start-panel {
+        grid-template-columns: 0.95fr 1.05fr;
+      }
+
+      .choices-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 920px) {
+      .hero-grid,
+      .scene-layout,
+      .ending-panel {
+        grid-template-columns: 0.96fr 1.04fr;
+        align-items: center;
+      }
+
+      .hero-art {
+        min-height: 420px;
+        padding: 28px 24px 24px 0;
+      }
+
+      .scene-art {
+        min-height: 530px;
+        padding: 20px 0 20px 20px;
+        display: grid;
+        place-items: center;
+      }
+
+      .scene-body,
+      .ending-copy {
+        padding: 34px;
+      }
+
+      .choices-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .choice-card {
+        grid-template-columns: 1fr;
+        grid-template-rows: 76px 1fr;
+        min-height: 236px;
+        align-content: start;
+      }
+
+      .choice-icon {
+        width: 76px;
+        height: 76px;
+      }
+
+      .choice-topline {
+        display: grid;
+        gap: 8px;
+      }
+
+      .points-badge {
+        justify-self: start;
+      }
+    }
+
+    @media (max-width: 359px) {
+      .choice-card {
+        grid-template-columns: 56px 1fr;
+        padding: 12px;
+        border-radius: 21px;
+      }
+
+      .choice-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+      }
+
+      .choice-icon svg {
+        width: 50px;
+        height: 50px;
+      }
+
+      .score-pill {
+        min-width: 104px;
+        padding-inline: 10px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .david-motion,
+      .song-note,
+      .stream-shimmer,
+      .cloud-drift,
+      .sun-glow,
+      .sheep-bob,
+      .soft-sparkles,
+      .grass-wave,
+      .flag-wave,
+      .confetti-piece,
+      .choice-card,
+      .score-pill.score-pulse,
+      .point-pop,
+      .badge-toast,
+      .badge-summary.reveal .virtue-badge,
+      .game-card.story-turn-out .scene-layout,
+      .game-card.story-turn-in .scene-layout {
+        animation: none !important;
+      }
+    }
   </style>
 </head>
 <body>
-<main>
-<h1>Choose Your Bible Adventure</h1>
-<p>The full game code was too large to push through this connector in one step. Please upload the pasted HTML manually to replace this temporary page.</p>
-</main>
+  <div class="game-shell">
+    <header class="top-bar" aria-label="Game header">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true" id="brandBadge"></div>
+        <h1>Choose Your Bible Adventure</h1>
+      </div>
+      <div class="score-pill" id="scorePill" aria-live="polite" aria-label="Faith Points">
+        <span aria-hidden="true" id="scoreIcon"></span>
+        <span id="scoreText">0 Faith Points</span>
+      </div>
+    </header>
+    <div class="toast-layer" id="toastLayer" aria-live="polite" aria-atomic="true"></div>
+
+    <main>
+      <section id="titleScreen" class="screen active" aria-labelledby="titleHeading">
+        <div class="hero">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <div class="kicker"><span aria-hidden="true" id="kickerIcon"></span> Bible story game</div>
+              <h2 id="titleHeading">David and Goliath</h2>
+              <p>Step into a cheerful storybook adventure. Make kind, brave, prayerful choices and watch your Faith Points grow as David learns to trust God.</p>
+            </div>
+            <div class="hero-art" id="heroArt" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <div class="start-panel">
+          <div class="story-picker">
+            <div class="section-heading">
+              <h3>Pick a Story</h3>
+              <span class="mini-badge" aria-hidden="true">1</span>
+            </div>
+            <label class="sr-only" for="storySelect">Story selector</label>
+            <select id="storySelect" class="story-select"></select>
+            <ul class="future-stories" id="futureStories" aria-label="Future Bible stories"></ul>
+            <button class="primary-action" id="startButton" type="button">
+              <span aria-hidden="true" id="startIcon"></span>
+              Start Adventure
+            </button>
+          </div>
+
+          <div class="how-to" aria-labelledby="howToHeading">
+            <div class="section-heading">
+              <h3 id="howToHeading">How to Play</h3>
+              <span class="mini-badge" aria-hidden="true">?</span>
+            </div>
+            <ul class="how-to-list">
+              <li><span class="mini-badge" aria-hidden="true">A</span><span>Read each short scene and choose what David should do next.</span></li>
+              <li><span class="mini-badge" aria-hidden="true">B</span><span>Every card gives Faith Points and a cheerful note of encouragement.</span></li>
+              <li><span class="mini-badge" aria-hidden="true">C</span><span>Your choices may take a small detour, then the story keeps moving forward.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="gameScreen" class="screen" aria-labelledby="sceneTitle">
+        <article class="game-card">
+          <div class="progress-wrap">
+            <div class="progress-row">
+              <span id="progressLabel">Scene 1 of 11</span>
+              <span id="progressPercent">0% complete</span>
+            </div>
+            <div class="progress-track" aria-hidden="true">
+              <div id="progressFill" class="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="scene-layout">
+            <div id="sceneArt" class="scene-art" aria-hidden="true"></div>
+            <div class="scene-body">
+              <h2 id="sceneTitle" class="scene-title"></h2>
+              <p id="storyText" class="story-text"></p>
+              <div id="lessonBox" class="lesson-box"></div>
+
+              <h3 class="choice-heading">What should David choose?</h3>
+              <div id="choicesGrid" class="choices-grid" role="group" aria-label="Story choices"></div>
+              <div id="feedback" class="feedback" aria-live="polite"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="endingScreen" class="screen" aria-labelledby="endingTitle">
+        <div class="ending-panel">
+          <div class="ending-art" id="endingArt" aria-hidden="true"></div>
+          <div class="ending-copy">
+            <div class="ending-kicker"><span aria-hidden="true" id="endingBadgeIcon"></span> Adventure Complete</div>
+            <h2 id="endingTitle"></h2>
+            <p id="endingMessage"></p>
+            <p id="endingBlessing"></p>
+            <div class="badge-summary" id="badgeSummary" aria-live="polite"></div>
+            <div class="score-summary" id="finalScore"></div>
+            <button class="primary-action" id="playAgainButton" type="button">
+              <span aria-hidden="true" id="againIcon"></span>
+              Play Again
+            </button>
+            <button class="secondary-action" id="storyMenuButton" type="button">
+              <span aria-hidden="true" id="menuIcon"></span>
+              Story Menu
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    /*
+      STORY SCENES, CHOICES, FAITH POINT VALUES, AND ENDING TEXT:
+      Edit the data below to change this story or add another one later.
+      SVG GRAPHICS: Art helpers are in the "svgArt" and "choiceIcon" functions.
+    */
+
+    const futureStories = [
+      "Noah's Ark",
+      "Daniel in the Lions' Den",
+      "Esther Saves Her People",
+      "Jonah's Journey",
+      "Moses and the Red Sea",
+      "The Good Samaritan",
+      "The Lost Sheep"
+    ];
+
+    const badgeCatalog = {
+      prayer: { title: "Prayer Champion", note: "You chose to pray and trust God." },
+      helpful: { title: "Helpful Friend", note: "You noticed people who needed kindness." },
+      brave: { title: "Brave Heart", note: "You practiced courage with humility." },
+      listener: { title: "Wise Listener", note: "You slowed down to listen and learn." },
+      servant: { title: "Faithful Servant", note: "You served with a willing heart." }
+    };
+
+    const stories = {
+      david: {
+        title: "David and Goliath",
+        available: true,
+        totalSteps: 11,
+        scenes: [
+          {
+            id: "pasture",
+            progressStep: 1,
+            art: "pasture",
+            title: "Morning in the Pasture",
+            text: "David begins the day watching his family's sheep. One little lamb wanders behind a hill, and David notices before it gets too far. His father soon calls him with an important errand, so David must choose how to finish his pasture work.",
+            lesson: "Serving faithfully in small things can prepare our hearts for bigger things.",
+            choices: [
+              { title: "Follow the Little Bleat", desc: "Find the lost lamb and guide it back gently.", points: 4, next: "basket", icon: "sheep", badges: ["helpful", "servant"], feedback: "David notices the lamb and serves with care. Faithfulness can look like one gentle rescue." },
+              { title: "Pray and Count the Sheep", desc: "Ask God for a careful heart before leaving.", points: 4, next: "basket", icon: "prayer", badges: ["prayer", "servant"], feedback: "David prays and checks the flock. Prayer helps him serve with peace." },
+              { title: "Race to Father's Call", desc: "Hurry home, eager to hear the errand.", points: 2, next: "basket", icon: "feet", badges: ["brave"], feedback: "David is ready to move. Brave feet are strongest when they also stay watchful." }
+            ]
+          },
+          {
+            id: "basket",
+            progressStep: 2,
+            art: "basket",
+            title: "A Basket for Brothers",
+            text: "David's father gives him roasted grain, bread, and cheese to take to his brothers at the camp. The basket smells warm and good, and the road will be long. David wants his obedience to be careful, cheerful, and helpful.",
+            lesson: "Obedience can be loving service.",
+            choices: [
+              { title: "Pack the Basket Like a Mission", desc: "Tuck in every loaf so the food arrives safely.", points: 3, next: "road", icon: "basket", badges: ["servant"], feedback: "David treats the errand like a real act of love. Careful service can bless hungry people." },
+              { title: "Listen to Every Instruction", desc: "Remember who gets the food and what to report.", points: 4, next: "road", icon: "heart", badges: ["listener", "servant"], feedback: "David listens closely before he leaves. A wise listener is easier to trust with an important job." },
+              { title: "Peek Toward the Road", desc: "Wonder what the camp will be like while he packs.", points: 2, next: "road", icon: "spark", badges: ["brave"], feedback: "David feels the pull of adventure. Wonder is good when it stays connected to the job God gives." }
+            ]
+          },
+          {
+            id: "road",
+            progressStep: 3,
+            art: "road",
+            title: "Across the Sunny Hills",
+            text: "David walks over the soft hills toward the army camp. Birds sing overhead, and an old song about God's care comes back to his mind. Farther down the path, someone looks unsure about which road is safe.",
+            lesson: "Remembering God's goodness can make courage steady.",
+            choices: [
+              { title: "Remember the Shepherd Song", desc: "Sing softly and let worship steady his steps.", points: 4, next: "camp", icon: "song", badges: ["prayer", "brave"], feedback: "The song helps David remember God's care. Worship can make a long road feel less lonely." },
+              { title: "Help the Traveler Find the Path", desc: "Pause and point out the safer way through the hills.", points: 3, next: "traveler", icon: "help", badges: ["helpful"], feedback: "David notices someone else on the road. Kindness can travel with obedience." },
+              { title: "Scout the Quick Hill Road", desc: "Choose the faster path so the bread stays fresh.", points: 2, next: "camp", icon: "wind", badges: ["brave"], feedback: "David moves with energy. A brave shortcut still needs a thoughtful heart." }
+            ]
+          },
+          {
+            id: "traveler",
+            progressStep: 3.5,
+            sceneLabel: "Scene 3A of 11",
+            art: "traveler",
+            title: "A Kind Stop",
+            text: "The traveler smiles with relief when David pauses. David still needs to reach the camp, but kindness can fit inside an important errand. He chooses one helpful thing before moving on with the basket.",
+            lesson: "Helping others can be part of obeying God.",
+            choices: [
+              { title: "Draw a Map in the Dust", desc: "Use a stick to show the safe turns clearly.", points: 3, next: "camp", icon: "path", badges: ["helpful", "listener"], feedback: "David helps without losing his mission. Clear kindness is a gift." },
+              { title: "Share Bread for the Journey", desc: "Offer a small piece with a generous heart.", points: 4, next: "camp", icon: "basket", badges: ["helpful", "servant"], feedback: "David shares gladly. Generosity can make the road brighter for someone else." }
+            ]
+          },
+          {
+            id: "camp",
+            progressStep: 4,
+            art: "camp",
+            title: "Tents in the Valley",
+            text: "At last, David sees rows of tents, bright shields, and busy soldiers. He leaves the supplies with the keeper, then notices a young soldier trying to hide a worried face. The valley feels big, but God is bigger.",
+            lesson: "A faithful helper notices people, not just the noise around them.",
+            choices: [
+              { title: "Find His Brothers First", desc: "Carry the news and food exactly as his father asked.", points: 3, next: "goliath", icon: "basket", badges: ["servant"], feedback: "David keeps the errand first. Faithful service matters even in a loud camp." },
+              { title: "Listen to the Worried Soldier", desc: "Ask what happened and let him speak.", points: 4, next: "goliath", icon: "question", badges: ["listener", "helpful"], feedback: "David listens before speaking. A calm ear can be a brave gift." },
+              { title: "Explore the Shield Line", desc: "Notice the helmets, shields, and nervous faces.", points: 2, next: "goliath", icon: "shield", badges: ["listener"], feedback: "David sees the camp's tools and its fear. Soon he will remember a stronger help." }
+            ]
+          },
+          {
+            id: "goliath",
+            progressStep: 5,
+            art: "giant",
+            title: "A Loud Challenge",
+            text: "A very tall warrior steps into the valley and shouts a challenge. The soldiers feel afraid, and David can hear it in their quiet voices. This story keeps the giant as a faraway silhouette while David thinks about God's honor.",
+            lesson: "Courage is not pretending; courage remembers God and cares for people.",
+            choices: [
+              { title: "Help a Frightened Soldier", desc: "Speak gently to someone who looks afraid.", points: 4, next: "brothers", icon: "comfort", badges: ["helpful", "brave"], feedback: "David encourages without showing off. Brave words can be gentle words." },
+              { title: "Ask What Everyone Heard", desc: "Listen carefully before he decides what to say.", points: 3, next: "brothers", icon: "question", badges: ["listener"], feedback: "David gathers the story before answering. Wise listening can clear away confusion." },
+              { title: "Find a Quiet Place to Pray", desc: "Step near a tent and ask God for courage.", points: 2, next: "quiet", icon: "prayer", badges: ["prayer"], feedback: "David chooses a quiet place instead of quick words. Prayer can steady a brave heart." }
+            ]
+          },
+          {
+            id: "quiet",
+            progressStep: 5.5,
+            sceneLabel: "Scene 5A of 11",
+            art: "quiet",
+            title: "A Quiet Courage Pause",
+            text: "David steps beside a tent where the noise feels softer. He remembers the sheep, the hills, and the times God helped him protect the flock. His heart becomes steady again without needing to act important.",
+            lesson: "A quiet pause can help courage grow with humility.",
+            choices: [
+              { title: "Pray for Calm Courage", desc: "Ask God to guide his heart and next words.", points: 4, next: "brothers", icon: "prayer", badges: ["prayer", "brave"], feedback: "David lets prayer shape his courage before he speaks." },
+              { title: "Remember the Lion and Bear", desc: "Think about the times God protected the sheep.", points: 3, next: "brothers", icon: "sheep", badges: ["brave", "servant"], feedback: "Remembering God's past help gives David steady hope for today." }
+            ]
+          },
+          {
+            id: "brothers",
+            progressStep: 6,
+            art: "brothers",
+            title: "A Hard Conversation",
+            text: "One of David's brothers misunderstands him and speaks sharply. David could answer sharply back, but he knows harsh words can make worry grow. He chooses how to keep serving without adding anger.",
+            lesson: "Kindness is brave when feelings are big.",
+            choices: [
+              { title: "Answer With a Soft Voice", desc: "Keep his words calm and respectful.", points: 4, next: "king", icon: "dove", badges: ["listener", "brave"], feedback: "Gentle words show strength. David does not let anger lead him." },
+              { title: "Ask a Soldier for More News", desc: "Step aside peacefully and listen again.", points: 3, next: "king", icon: "path", badges: ["listener"], feedback: "David chooses peace and keeps learning what is happening." },
+              { title: "Explain the Errand and Keep Serving", desc: "Tell his brother he came to help, then move on.", points: 3, next: "king", icon: "heart", badges: ["servant"], feedback: "David speaks honestly without being harsh. Careful words can keep love in the room." }
+            ]
+          },
+          {
+            id: "king",
+            progressStep: 7,
+            art: "king",
+            title: "Before King Saul",
+            text: "David is brought to King Saul's tent. He tells the king how God helped him protect the sheep when he was only doing his regular work. David does not trust in size or attention; he trusts in the Lord.",
+            lesson: "Past faithfulness can remind us to trust God today.",
+            choices: [
+              { title: "Tell How God Helped Before", desc: "Share the sheep-field story and give God credit.", points: 4, next: "armor", icon: "scroll", badges: ["brave", "servant"], feedback: "David gives God the credit. Remembering helps courage grow." },
+              { title: "Listen to Saul Carefully", desc: "Hear the king's concerns before answering.", points: 3, next: "armor", icon: "stand", badges: ["listener"], feedback: "David stays respectful and calm. Listening can make courage clearer." },
+              { title: "Pray for Wise Words", desc: "Quietly ask God for a humble answer.", points: 4, next: "armor", icon: "prayer", badges: ["prayer", "listener"], feedback: "Prayer is a wise choice before a big moment." }
+            ]
+          },
+          {
+            id: "armor",
+            progressStep: 8,
+            art: "armor",
+            title: "Too Much Armor",
+            text: "King Saul offers David a helmet, shield, and heavy armor. David tries them, but they do not fit him well. He knows God can use the simple skills he practiced while serving in the pasture.",
+            lesson: "God can use who you are, not just what others expect.",
+            choices: [
+              { title: "Choose the Tools God Trained", desc: "Leave the heavy armor and use his staff and sling.", points: 4, next: "stream", icon: "helmet", badges: ["brave", "listener"], feedback: "David is honest about what fits. Wisdom can say yes or no." },
+              { title: "Thank Saul for Caring", desc: "Show respect before choosing a simpler way.", points: 3, next: "stream", icon: "thanks", badges: ["servant"], feedback: "Respect keeps David's heart gentle while he chooses wisely." },
+              { title: "Try the Armor Slowly", desc: "Take a few careful steps and notice what is hard.", points: 2, next: "stream", icon: "steps", badges: ["listener"], feedback: "Trying carefully helps David learn what is best for him." }
+            ]
+          },
+          {
+            id: "stream",
+            progressStep: 9,
+            art: "stream",
+            title: "Five Smooth Stones",
+            text: "David walks to a clear stream and kneels beside the sparkling water. Smooth stones rest under the moving water, waiting to be noticed. Each simple stone reminds him that God can use small things offered with faith.",
+            lesson: "God can use simple gifts when they are offered with faith.",
+            choices: [
+              { title: "Search the Stream for Smooth Stones", desc: "Look carefully and choose five that will fly straight.", points: 3, next: "valley", icon: "stones", badges: ["listener"], feedback: "David prepares with care. Faith and preparation can work together." },
+              { title: "Kneel and Pray by the Water", desc: "Ask God for courage and a humble heart.", points: 4, next: "stream-prayer", icon: "streamPrayer", badges: ["prayer"], feedback: "A quiet prayer beside the water steadies David's heart." },
+              { title: "Remember the Protected Sheep", desc: "Think of the times God helped him guard the flock.", points: 4, next: "valley", icon: "sheep", badges: ["brave", "servant"], feedback: "Remembering past help gives David brave hope for today." }
+            ]
+          },
+          {
+            id: "stream-prayer",
+            progressStep: 9.5,
+            sceneLabel: "Scene 9A of 11",
+            art: "streamPrayer",
+            title: "Still Water Prayer",
+            text: "The stream sparkles while David holds the smooth stones. He does not ask to look important; he asks to be faithful. Then he stands up ready for the next right step.",
+            lesson: "Prayer helps us trust God more than ourselves.",
+            choices: [
+              { title: "Choose Humility", desc: "Remember that the glory belongs to God.", points: 4, next: "valley", icon: "faith", badges: ["prayer", "servant"], feedback: "David keeps a humble heart, and that makes his courage gentle." },
+              { title: "Step Forward With Trust", desc: "Move toward the valley with steady courage.", points: 3, next: "valley", icon: "steps", badges: ["brave"], feedback: "Trust grows as David takes the next faithful step." }
+            ]
+          },
+          {
+            id: "valley",
+            progressStep: 10,
+            art: "valley",
+            title: "Into the Wide Valley",
+            text: "David steps into the valley with his staff, sling, and stones. The giant looks tall, but David's trust in God is taller still. David's words are brave, humble, and clear.",
+            lesson: "Faith speaks truth without being unkind.",
+            choices: [
+              { title: "Speak Truth With a Humble Voice", desc: "Say that the battle belongs to the Lord.", points: 4, next: "victory", icon: "faith", badges: ["brave", "servant"], feedback: "David points everyone toward God, not himself." },
+              { title: "Encourage the Camp to Remember God", desc: "Let the soldiers see hope instead of fear.", points: 3, next: "victory", icon: "flag", badges: ["helpful", "brave"], feedback: "Hope can spread when someone chooses trust." },
+              { title: "Take the Next Faithful Step", desc: "Breathe, focus, and move with steady trust.", points: 3, next: "victory", icon: "target", badges: ["brave"], feedback: "Steady courage helps David keep moving." }
+            ]
+          },
+          {
+            id: "victory",
+            progressStep: 11,
+            art: "celebration",
+            title: "A Joyful Celebration",
+            text: "God helps David face the giant, and the camp fills with joyful relief. The people cheer, and David remembers that the help came from the Lord. The story ends with serving, courage, kindness, humility, and trust shining bright.",
+            lesson: "Every good gift is a reason to thank God.",
+            choices: [
+              { title: "Thank God Before the Cheers", desc: "Remember who helped from beginning to end.", points: 4, next: "ending", icon: "praise", badges: ["prayer", "servant"], feedback: "Beautiful ending. David's thankful heart shines." },
+              { title: "Celebrate With the Whole Camp", desc: "Share the joy with brothers and soldiers.", points: 3, next: "ending", icon: "trophy", badges: ["helpful"], feedback: "Joy is even better when it is shared kindly." },
+              { title: "Tell the Story to Encourage Others", desc: "Help everyone remember God's faithfulness.", points: 4, next: "ending", icon: "scroll", badges: ["helpful", "listener", "servant"], feedback: "A faithful story can encourage many hearts." }
+            ]
+          }
+        ],
+        endings: {
+          high: {
+            title: "Giant Slayer of Faith",
+            message: "You played with courage, kindness, prayer, and wisdom. You helped David serve faithfully, notice worried people, remember God's past help, and choose humility in a big moment.",
+            blessing: "Keep growing brave and gentle. God can use a faithful heart to bring hope to others."
+          },
+          medium: {
+            title: "Faithful Helper",
+            message: "You played with a helpful heart and kept moving with David through the story. Your choices practiced listening, serving, courage, and trust while David learned to depend on God.",
+            blessing: "God is patient and kind. Keep practicing courage, prayer, wisdom, and love."
+          },
+          low: {
+            title: "Learning to Trust",
+            message: "David's day had many chances to learn. You still walked through a story about serving, listening, courage, and trusting God one step at a time.",
+            blessing: "You are loved, and every new try can be a fresh step of faith."
+          }
+        }
+      }
+    };
+
+    const gameState = {
+      storyKey: "david",
+      currentSceneId: "pasture",
+      faithPoints: 0,
+      sceneNumber: 1,
+      earnedBadges: new Set(),
+      acceptingChoice: true
+    };
+
+    const screens = {
+      title: document.getElementById("titleScreen"),
+      game: document.getElementById("gameScreen"),
+      ending: document.getElementById("endingScreen")
+    };
+
+    const ui = {
+      storySelect: document.getElementById("storySelect"),
+      futureStories: document.getElementById("futureStories"),
+      startButton: document.getElementById("startButton"),
+      playAgainButton: document.getElementById("playAgainButton"),
+      storyMenuButton: document.getElementById("storyMenuButton"),
+      sceneTitle: document.getElementById("sceneTitle"),
+      storyText: document.getElementById("storyText"),
+      lessonBox: document.getElementById("lessonBox"),
+      choicesGrid: document.getElementById("choicesGrid"),
+      feedback: document.getElementById("feedback"),
+      scoreText: document.getElementById("scoreText"),
+      scorePill: document.getElementById("scorePill"),
+      toastLayer: document.getElementById("toastLayer"),
+      progressLabel: document.getElementById("progressLabel"),
+      progressPercent: document.getElementById("progressPercent"),
+      progressFill: document.getElementById("progressFill"),
+      sceneArt: document.getElementById("sceneArt"),
+      heroArt: document.getElementById("heroArt"),
+      endingArt: document.getElementById("endingArt"),
+      endingTitle: document.getElementById("endingTitle"),
+      endingMessage: document.getElementById("endingMessage"),
+      endingBlessing: document.getElementById("endingBlessing"),
+      badgeSummary: document.getElementById("badgeSummary"),
+      finalScore: document.getElementById("finalScore")
+    };
+
+    ui.gameCard = document.querySelector(".game-card");
+    ui.endingPanel = document.querySelector(".ending-panel");
+
+    document.getElementById("brandBadge").innerHTML = smallSvg("faithBadge");
+    document.getElementById("scoreIcon").innerHTML = smallSvg("star");
+    document.getElementById("kickerIcon").innerHTML = smallSvg("book");
+    document.getElementById("startIcon").innerHTML = smallSvg("play");
+    document.getElementById("againIcon").innerHTML = smallSvg("play");
+    document.getElementById("menuIcon").innerHTML = smallSvg("book");
+    document.getElementById("endingBadgeIcon").innerHTML = smallSvg("faithBadge");
+    ui.heroArt.innerHTML = svgArt("hero");
+
+    buildStorySelector();
+    updateScore();
+
+    ui.startButton.addEventListener("click", startGame);
+    ui.playAgainButton.addEventListener("click", startGame);
+    ui.storyMenuButton.addEventListener("click", showStoryMenu);
+
+    function buildStorySelector() {
+      Object.entries(stories).forEach(([key, story]) => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = story.available ? story.title : `${story.title} (coming soon)`;
+        option.disabled = !story.available;
+        ui.storySelect.appendChild(option);
+      });
+
+      futureStories.forEach((title) => {
+        const item = document.createElement("li");
+        item.textContent = title;
+        ui.futureStories.appendChild(item);
+      });
+    }
+
+    function startGame() {
+      gameState.storyKey = ui.storySelect.value;
+      gameState.currentSceneId = stories[gameState.storyKey].scenes[0].id;
+      gameState.faithPoints = 0;
+      gameState.sceneNumber = 1;
+      gameState.earnedBadges = new Set();
+      gameState.acceptingChoice = true;
+      clearToasts();
+      updateScore();
+      showScreen("game");
+      renderScene();
+    }
+
+    function showStoryMenu() {
+      gameState.faithPoints = 0;
+      gameState.earnedBadges = new Set();
+      clearToasts();
+      updateScore();
+      showScreen("title");
+      ui.startButton.focus();
+    }
+
+    function showScreen(name) {
+      Object.values(screens).forEach((screen) => screen.classList.remove("active"));
+      screens[name].classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function getStory() {
+      return stories[gameState.storyKey];
+    }
+
+    function getCurrentScene() {
+      return getStory().scenes.find((scene) => scene.id === gameState.currentSceneId);
+    }
+
+    function renderScene() {
+      const story = getStory();
+      const scene = getCurrentScene();
+      const total = story.totalSteps || story.scenes.length;
+      const sceneIndex = story.scenes.findIndex((item) => item.id === scene.id);
+      const progressStep = scene.progressStep || sceneIndex + 1;
+      const progress = Math.min(99, Math.round((progressStep / total) * 100));
+
+      gameState.sceneNumber = sceneIndex + 1;
+      gameState.acceptingChoice = true;
+
+      ui.sceneTitle.textContent = scene.title;
+      ui.storyText.textContent = scene.text;
+      ui.lessonBox.innerHTML = `<span aria-hidden="true">${smallSvg("book")}</span><span>${scene.lesson}</span>`;
+      ui.sceneArt.innerHTML = svgArt(scene.art);
+      ui.feedback.textContent = "";
+      ui.feedback.classList.remove("visible");
+      ui.progressLabel.textContent = scene.sceneLabel || `Scene ${Math.ceil(progressStep)} of ${total}`;
+      ui.progressPercent.textContent = `${progress}% complete`;
+      ui.progressFill.style.width = `${progress}%`;
+      ui.gameCard.classList.remove("story-turn-out", "story-turn-in");
+      void ui.gameCard.offsetWidth;
+      ui.gameCard.classList.add("story-turn-in");
+      window.setTimeout(() => ui.gameCard.classList.remove("story-turn-in"), 320);
+
+      ui.choicesGrid.innerHTML = "";
+      scene.choices.forEach((choice, choiceIndex) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "choice-card";
+        card.setAttribute("aria-label", `${choice.title}. ${choice.desc} Earn ${choice.points} Faith Points.`);
+        card.innerHTML = `
+          <span class="choice-icon" aria-hidden="true">${choiceIcon(choice.icon)}</span>
+          <span class="choice-copy">
+            <span class="choice-topline">
+              <span class="choice-title">${choice.title}</span>
+              <span class="points-badge">+${choice.points} FP</span>
+            </span>
+            <span class="choice-desc">${choice.desc}</span>
+          </span>
+        `;
+        card.addEventListener("click", () => chooseOption(choice, card));
+        card.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            chooseOption(choice, card);
+          }
+        });
+        ui.choicesGrid.appendChild(card);
+        if (choiceIndex === 0) {
+          setTimeout(() => card.focus({ preventScroll: true }), 40);
+        }
+      });
+    }
+
+    function chooseOption(choice, selectedCard) {
+      if (!gameState.acceptingChoice) return;
+      gameState.acceptingChoice = false;
+      if (selectedCard) {
+        selectedCard.classList.add("selected");
+      }
+      Array.from(ui.choicesGrid.children).forEach((button) => {
+        button.disabled = true;
+      });
+
+      gameState.faithPoints += choice.points;
+      showPointReward(choice.points);
+      const newBadges = awardBadges(choice.badges);
+      newBadges.forEach(showBadgeToast);
+      updateScore();
+      ui.feedback.innerHTML = `<strong>Great choice!</strong> ${choice.feedback}`;
+      ui.feedback.classList.add("visible");
+
+      window.setTimeout(() => {
+        ui.gameCard.classList.add("story-turn-out");
+      }, 620);
+
+      window.setTimeout(() => {
+        if (choice.next === "ending") {
+          renderEnding();
+        } else {
+          gameState.currentSceneId = choice.next;
+          renderScene();
+        }
+      }, 980);
+    }
+
+    function updateScore() {
+      const label = gameState.faithPoints === 1 ? "Faith Point" : "Faith Points";
+      ui.scoreText.textContent = `${gameState.faithPoints} ${label}`;
+    }
+
+    function renderEnding() {
+      const story = getStory();
+      const totalScenes = story.totalSteps || story.scenes.length;
+      const progress = 100;
+      ui.progressFill.style.width = `${progress}%`;
+      ui.progressPercent.textContent = `${progress}% complete`;
+      ui.progressLabel.textContent = `Scene ${totalScenes} of ${totalScenes}`;
+
+      const ending = chooseEnding(story);
+      const isHighEnding = ending.title === "Giant Slayer of Faith";
+      const earnedBadges = getEarnedBadges();
+      clearToasts();
+      ui.gameCard.classList.remove("story-turn-out", "story-turn-in");
+      ui.endingPanel.classList.toggle("ending-high", isHighEnding);
+      ui.endingTitle.textContent = ending.title;
+      ui.endingMessage.textContent = `${ending.message} ${badgeSentence(earnedBadges)}`;
+      ui.endingBlessing.textContent = ending.blessing;
+      ui.badgeSummary.innerHTML = renderBadgeSummary(earnedBadges);
+      ui.badgeSummary.classList.remove("reveal");
+      void ui.badgeSummary.offsetWidth;
+      ui.badgeSummary.classList.add("reveal");
+      ui.finalScore.innerHTML = `${smallSvg("star")} ${gameState.faithPoints} Faith Points`;
+      ui.endingArt.innerHTML = svgArt(isHighEnding ? "endingHigh" : "ending");
+      showScreen("ending");
+      ui.playAgainButton.focus();
+    }
+
+    /*
+      ENDING TEXT:
+      Adjust thresholds here if you change point values or scene count.
+    */
+    function chooseEnding(story) {
+      if (gameState.faithPoints >= 45) return story.endings.high;
+      if (gameState.faithPoints >= 36) return story.endings.medium;
+      return story.endings.low;
+    }
+
+    function awardBadges(badges = []) {
+      const newBadges = [];
+      badges.forEach((badge) => {
+        if (badgeCatalog[badge]) {
+          const isNew = !gameState.earnedBadges.has(badge);
+          gameState.earnedBadges.add(badge);
+          if (isNew) {
+            newBadges.push({ badge, ...badgeCatalog[badge] });
+          }
+        }
+      });
+      return newBadges;
+    }
+
+    function getEarnedBadges() {
+      return Object.entries(badgeCatalog)
+        .filter(([badge]) => gameState.earnedBadges.has(badge))
+        .map(([badge, details]) => ({ badge, ...details }));
+    }
+
+    function formatBadgeList(earnedBadges) {
+      const names = earnedBadges.map((badge) => badge.title);
+      if (names.length === 0) return "no badges yet";
+      if (names.length === 1) return names[0];
+      if (names.length === 2) return `${names[0]} and ${names[1]}`;
+      return `${names.slice(0, -1).join(", ")}, and ${names[names.length - 1]}`;
+    }
+
+    function badgeSentence(earnedBadges) {
+      if (earnedBadges.length === 0) {
+        return "You kept learning to trust God, and every new try can grow courage and kindness.";
+      }
+      return `Your earned badges were ${formatBadgeList(earnedBadges)}, reminders of Christian character you practiced along the way.`;
+    }
+
+    function renderBadgeSummary(earnedBadges) {
+      if (earnedBadges.length === 0) {
+        return '<p class="badge-note">No character badges were earned this time, but David still learned to trust God one step at a time.</p>';
+      }
+      return `
+        <h3>Character badges earned</h3>
+        <div class="badge-grid">
+          ${earnedBadges.map((badge, index) => `
+            <span class="virtue-badge" title="${badge.note}" style="--badge-order: ${index}">
+              ${smallSvg("faithBadge")}
+              ${badge.title}
+            </span>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function showPointReward(points) {
+      ui.scorePill.classList.remove("score-pulse");
+      void ui.scorePill.offsetWidth;
+      ui.scorePill.classList.add("score-pulse");
+
+      const pop = document.createElement("span");
+      pop.className = "point-pop";
+      pop.setAttribute("aria-hidden", "true");
+      pop.textContent = `+${points} Faith Points`;
+      ui.scorePill.appendChild(pop);
+      window.setTimeout(() => pop.remove(), 1050);
+    }
+
+    function showBadgeToast(badge) {
+      const toast = document.createElement("div");
+      toast.className = "badge-toast";
+      toast.dataset.badge = badge.badge;
+      toast.textContent = `🏅 ${badge.title} unlocked!`;
+      ui.toastLayer.appendChild(toast);
+      window.setTimeout(() => toast.remove(), 2500);
+    }
+
+    function clearToasts() {
+      ui.toastLayer.innerHTML = "";
+    }
+
+    function smallSvg(type) {
+      const map = {
+        star: '<svg viewBox="0 0 24 24" width="22" height="22" role="img" aria-label=""><path fill="#f7a928" d="M12 2.5l2.7 5.48 6.05.88-4.38 4.27 1.03 6.02L12 16.3l-5.4 2.84 1.03-6.02-4.38-4.27 6.05-.88L12 2.5z"/></svg>',
+        book: '<svg viewBox="0 0 24 24" width="22" height="22" role="img" aria-label=""><path fill="#6157cc" d="M5 4.2c2.35 0 4.22.5 5.6 1.5v14.1c-1.4-.92-3.25-1.38-5.6-1.38-.9 0-1.63-.73-1.63-1.63V5.83C3.37 4.93 4.1 4.2 5 4.2zm14 0c.9 0 1.63.73 1.63 1.63v10.96c0 .9-.73 1.63-1.63 1.63-2.35 0-4.2.46-5.6 1.38V5.7c1.38-1 3.25-1.5 5.6-1.5z"/></svg>',
+        play: '<svg viewBox="0 0 24 24" width="22" height="22" role="img" aria-label=""><path fill="#237a48" d="M8.2 5.3c0-.82.9-1.32 1.58-.87l9 6c.62.41.62 1.33 0 1.74l-9 6c-.68.45-1.58-.04-1.58-.87v-12z"/></svg>',
+        faithBadge: '<svg viewBox="0 0 64 64" width="34" height="34" role="img" aria-label=""><circle cx="32" cy="32" r="27" fill="#fff7bd"/><path fill="#45b66b" d="M32 10l5.8 11.8 13 1.9-9.4 9.2 2.2 13-11.6-6.1-11.6 6.1 2.2-13-9.4-9.2 13-1.9L32 10z"/><path fill="#fff" d="M31 21h3v17h-3z"/><path fill="#fff" d="M25 27h15v3H25z"/></svg>'
+      };
+      return map[type] || map.star;
+    }
+
+    /*
+      SVG GRAPHICS:
+      Each scene uses a unique lightweight inline SVG illustration.
+    */
+    function svgArt(type) {
+      const baseStart = '<svg viewBox="0 0 620 470" role="img" aria-label="">';
+      const sky = '<rect width="620" height="470" rx="28" fill="#dff5ff"/><circle class="sun-glow" cx="86" cy="78" r="44" fill="#ffd86b"/><path d="M0 335c84-58 141-74 226-38 91 39 166 19 235-21 59-34 113-28 159 3v191H0z" fill="#aee9a4"/><path d="M0 374c115-48 211-44 289-8 114 52 207 25 331-14v118H0z" fill="#6fce74"/>';
+      const end = '</svg>';
+      const clouds = '<g class="cloud-drift" fill="#fff" opacity=".9"><ellipse cx="402" cy="66" rx="42" ry="18"/><ellipse cx="438" cy="62" rx="32" ry="22"/><ellipse cx="469" cy="70" rx="42" ry="18"/><ellipse cx="160" cy="118" rx="32" ry="14"/><ellipse cx="188" cy="113" rx="24" ry="17"/><ellipse cx="214" cy="120" rx="32" ry="14"/></g>';
+
+      const david = (x = 286, y = 218, scale = 1, motion = "david-gentle") => `
+        <g class="david-motion ${motion}">
+        <g transform="translate(${x} ${y}) scale(${scale})">
+          <circle cx="0" cy="-62" r="24" fill="#8d5a32"/>
+          <circle cx="0" cy="-58" r="18" fill="#f1b47a"/>
+          <path d="M-21-66c7-25 38-24 45-3-12-8-28-7-45 3z" fill="#6b3b24"/>
+          <path d="M-26-30h52l16 84h-84z" fill="#ef5f8d"/>
+          <path d="M-30 0h60" stroke="#b72f66" stroke-width="7" stroke-linecap="round"/>
+          <path d="M-14 54v50M14 54v50" stroke="#65412a" stroke-width="10" stroke-linecap="round"/>
+          <path d="M-33 100h22M11 100h24" stroke="#3b2a1d" stroke-width="9" stroke-linecap="round"/>
+          <path d="M-29-22c-22 20-29 37-22 54M29-22c22 20 29 37 22 54" fill="none" stroke="#f1b47a" stroke-width="10" stroke-linecap="round"/>
+        </g>
+        </g>`;
+
+      const sheep = (x, y, scale = 1) => `
+        <g class="sheep-bob">
+        <g transform="translate(${x} ${y}) scale(${scale})">
+          <ellipse cx="0" cy="0" rx="34" ry="24" fill="#fff"/>
+          <circle cx="-24" cy="-8" r="16" fill="#fff"/>
+          <circle cx="24" cy="-6" r="15" fill="#fff"/>
+          <circle cx="-39" cy="0" r="16" fill="#40342d"/>
+          <circle cx="-43" cy="-4" r="3" fill="#fff"/>
+          <path d="M-22 18v24M12 18v24" stroke="#40342d" stroke-width="7" stroke-linecap="round"/>
+        </g>
+        </g>`;
+
+      const tent = (x, y, color = "#ffd86b") => `
+        <g transform="translate(${x} ${y})">
+          <path d="M0 86L58 0l66 86z" fill="${color}"/>
+          <path d="M58 0l13 86H32z" fill="rgba(255,255,255,.38)"/>
+          <path d="M0 86h124" stroke="#8d5a32" stroke-width="8" stroke-linecap="round"/>
+          <path d="M58 0L41 86" stroke="#8d5a32" stroke-width="4"/>
+        </g>`;
+
+      const basket = (x, y, scale = 1) => `
+        <g transform="translate(${x} ${y}) scale(${scale})">
+          <path d="M-50-8c6-45 94-45 100 0" fill="none" stroke="#8d5a32" stroke-width="12" stroke-linecap="round"/>
+          <path d="M-62-9H62L48 67h-96z" fill="#c98645"/>
+          <path d="M-55 12H55M-52 34H52M-48 55H48" stroke="#8d5a32" stroke-width="5"/>
+          <path d="M-32-23c13-22 46-22 64 0" fill="#f4d083"/>
+          <circle cx="-18" cy="-18" r="12" fill="#ffe2a1"/>
+          <circle cx="17" cy="-16" r="11" fill="#fff0ba"/>
+        </g>`;
+
+      const shield = (x, y, scale = 1) => `
+        <g transform="translate(${x} ${y}) scale(${scale})">
+          <path d="M0-52l47 18v40c0 40-29 62-47 70-18-8-47-30-47-70v-40z" fill="#6157cc"/>
+          <path d="M0-38l29 11v30c0 24-16 40-29 48z" fill="#9189ff"/>
+          <path d="M-24-8h48M0-35v74" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+        </g>`;
+
+      const helmet = (x, y, scale = 1) => `
+        <g transform="translate(${x} ${y}) scale(${scale})">
+          <path d="M-48 5c0-34 22-60 52-60 31 0 53 26 53 60v31H-48z" fill="#7b85a6"/>
+          <path d="M-30 8c0-22 14-39 34-39 21 0 36 17 36 39z" fill="#d9e0f0"/>
+          <path d="M-58 37H67" stroke="#3d4766" stroke-width="12" stroke-linecap="round"/>
+          <path d="M9-56c18 11 26 29 24 56" stroke="#3d4766" stroke-width="8" stroke-linecap="round"/>
+        </g>`;
+
+      const stream = '<path d="M0 392c80-45 157-19 218-38 76-24 124-92 214-90 80 2 116 56 188 39v167H0z" fill="#86d9ff"/><path class="stream-shimmer" d="M32 405c77-23 147 5 215-32 63-35 118-72 185-59 63 12 96 50 164 28" fill="none" stroke="#dff8ff" stroke-width="12" stroke-linecap="round"/>';
+
+      const stones = '<g fill="#8f9ab3"><ellipse cx="240" cy="366" rx="22" ry="13"/><ellipse cx="282" cy="354" rx="20" ry="12"/><ellipse cx="324" cy="370" rx="24" ry="13"/><ellipse cx="368" cy="356" rx="19" ry="11"/><ellipse cx="411" cy="372" rx="23" ry="13"/></g>';
+
+      const giant = '<g transform="translate(456 164)" opacity=".84"><ellipse cx="0" cy="-66" rx="34" ry="38" fill="#5f6d83"/><path d="M-42-22h84l28 190h-140z" fill="#6f7f98"/><path d="M-58 6c-36 34-47 77-30 125M58 6c36 34 47 77 30 125" fill="none" stroke="#6f7f98" stroke-width="20" stroke-linecap="round"/><path d="M-25 166v82M25 166v82" stroke="#4c5a70" stroke-width="21" stroke-linecap="round"/><path d="M-43 249h37M12 249h39" stroke="#3d4766" stroke-width="15" stroke-linecap="round"/></g>';
+
+      const trophy = '<g transform="translate(310 212)"><path d="M-60-60h120v46c0 41-25 70-60 70s-60-29-60-70z" fill="#ffd86b"/><path d="M-72-40h-45c0 49 30 75 71 75M72-40h45c0 49-30 75-71 75" fill="none" stroke="#f7a928" stroke-width="16" stroke-linecap="round"/><path d="M0 56v54M-38 110h76M-62 138H62" stroke="#8d5a32" stroke-width="16" stroke-linecap="round"/><path d="M0-36l12 25 28 4-20 19 5 28L0 27l-25 13 5-28-20-19 28-4z" fill="#fff7bd"/></g>';
+      const sparkles = '<g class="soft-sparkles" fill="#fff7bd"><path d="M92 320l5 10 10 5-10 5-5 10-5-10-10-5 10-5z"/><circle cx="468" cy="330" r="6"/><circle cx="518" cy="292" r="5"/></g>';
+      const grass = '<g class="grass-wave" fill="none" stroke="#45b66b" stroke-width="7" stroke-linecap="round"><path d="M70 390c6-20 14-29 26-42"/><path d="M520 394c5-18 13-28 25-40"/><path d="M572 388c4-15 10-24 20-34"/></g>';
+      const flag = '<g class="flag-wave" transform="translate(70 284)"><path d="M0 86V10" stroke="#8d5a32" stroke-width="7" stroke-linecap="round"/><path d="M4 13h64l-14 21 14 21H4z" fill="#45b66b"/><path d="M16 22h27" stroke="#fff" stroke-width="5" stroke-linecap="round"/></g>';
+      const confetti = '<g><rect class="confetti-piece" x="118" y="82" width="13" height="13" rx="3" fill="#ef5f8d"/><rect class="confetti-piece" x="492" y="96" width="12" height="12" rx="3" fill="#6157cc"/><rect class="confetti-piece" x="214" y="130" width="11" height="11" rx="3" fill="#45b66b"/><rect class="confetti-piece" x="405" y="72" width="13" height="13" rx="3" fill="#ffd86b"/><rect class="confetti-piece" x="536" y="162" width="10" height="10" rx="3" fill="#ef5f8d"/><rect class="confetti-piece" x="156" y="180" width="10" height="10" rx="3" fill="#86d9ff"/></g>';
+
+      const arts = {
+        hero: `${baseStart}${sky}${clouds}${tent(384,260,"#ffd86b")}${tent(470,282,"#8be980")}${sheep(160,358,1)}${sheep(86,374,.76)}${david(270,276,1.2,"david-walk")}<path d="M294 300c52 8 77 33 96 71" fill="none" stroke="#8d5a32" stroke-width="8" stroke-linecap="round"/><circle cx="388" cy="371" r="8" fill="#8f9ab3"/>${sparkles}${grass}${end}`,
+        pasture: `${baseStart}${sky}${clouds}${sheep(135,347,1.03)}${sheep(238,372,.8)}${sheep(472,352,.9)}${david(326,284,1.05,"david-walk")}<path d="M348 310c32 22 47 44 53 70" fill="none" stroke="#8d5a32" stroke-width="7" stroke-linecap="round"/>${grass}${end}`,
+        basket: `${baseStart}${sky}${clouds}${basket(313,282,1.35)}${david(170,295,.88,"david-carry")}<path d="M417 360c25-14 61-12 86 2" fill="none" stroke="#45b66b" stroke-width="12" stroke-linecap="round"/>${sparkles}${grass}${end}`,
+        road: `${baseStart}${sky}${clouds}<path d="M278 470c-22-66 1-135 84-212" fill="none" stroke="#d7a15e" stroke-width="54" stroke-linecap="round"/><path d="M302 470c-13-61 9-120 78-189" fill="none" stroke="#f6cc85" stroke-width="31" stroke-linecap="round"/>${basket(194,303,.7)}${david(248,304,.92,"david-travel")}<g class="song-note" fill="#6157cc"><path d="M460 126c18-20 36-20 54 0-18-9-36-9-54 0z"/><path d="M516 162c15-16 30-16 45 0-15-7-30-7-45 0z"/></g>${sparkles}${grass}${end}`,
+        traveler: `${baseStart}${sky}${clouds}<path d="M120 470c0-69 43-132 132-190" fill="none" stroke="#d7a15e" stroke-width="46" stroke-linecap="round"/><path d="M146 470c2-58 40-111 118-163" fill="none" stroke="#fff0ba" stroke-width="22" stroke-linecap="round"/>${david(232,314,.76,"david-travel")}<g transform="translate(378 318) scale(.76)"><circle cx="0" cy="-58" r="18" fill="#d79561"/><path d="M-21-62c9-20 34-20 43 0-15-5-29-5-43 0z" fill="#5a3827"/><path d="M-28-31h56l12 78h-80z" fill="#45b66b"/><path d="M-30-18c-18 15-28 30-30 48M30-18c18 15 28 30 30 48" fill="none" stroke="#d79561" stroke-width="9" stroke-linecap="round"/></g>${basket(304,374,.48)}${end}`,
+        camp: `${baseStart}${sky}${clouds}${tent(76,285,"#ffd86b")}${tent(224,270,"#ef5f8d")}${tent(388,286,"#8be980")}${shield(520,325,.7)}${david(304,313,.8,"david-enter")}${basket(230,364,.52)}${sparkles}${grass}${end}`,
+        giant: `${baseStart}${sky}${clouds}<path d="M0 351c93-34 183-28 279 7 122 44 211 29 341-23v135H0z" fill="#8bd57e"/>${giant}${david(168,329,.72,"david-step")}${shield(94,360,.45)}${end}`,
+        quiet: `${baseStart}<rect width="620" height="470" rx="28" fill="#e9f5ff"/><circle cx="88" cy="80" r="38" fill="#ffd86b"/><path d="M0 336c96-34 178-36 260-6 128 46 221 38 360-8v148H0z" fill="#aee9a4"/>${tent(330,258,"#ffd86b")}${sheep(112,366,.78)}${david(247,318,.82,"david-pray")}<path d="M280 238c18-19 41-19 59 0" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/><path d="M292 214c10-10 22-10 32 0" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>${end}`,
+        brothers: `${baseStart}${sky}${clouds}${tent(340,276,"#ffd86b")}${david(240,322,.78,"david-step")}<g transform="translate(372 324) scale(.82)"><circle cx="0" cy="-58" r="18" fill="#d79561"/><path d="M-22-64c10-20 35-16 43-2-14-3-28-2-43 2z" fill="#4b2d20"/><path d="M-28-30h56l13 78h-82z" fill="#6157cc"/><path d="M-30-18c-18 15-29 27-33 44M30-18c17 16 28 30 32 47" fill="none" stroke="#d79561" stroke-width="9" stroke-linecap="round"/></g><path d="M300 244c18-20 41-20 59 0" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/>${end}`,
+        king: `${baseStart}<rect width="620" height="470" rx="28" fill="#e9f5ff"/><path d="M0 338h620v132H0z" fill="#aee9a4"/><path d="M88 92h444l-46 265H134z" fill="#ffd86b"/><path d="M134 357L310 92l176 265z" fill="#fff0ba" opacity=".66"/><path d="M88 92h444" stroke="#8d5a32" stroke-width="12" stroke-linecap="round"/>${david(204,321,.72,"david-step")}<g transform="translate(414 302) scale(.88)"><circle cx="0" cy="-64" r="19" fill="#d79561"/><path d="M-24-83h48l-9 24h-30z" fill="#ffd86b"/><path d="M-30-35h60l16 92h-92z" fill="#7b85a6"/><path d="M-34-17c-23 25-25 46-11 68M34-17c22 21 29 42 18 68" fill="none" stroke="#d79561" stroke-width="10" stroke-linecap="round"/></g>${end}`,
+        armor: `${baseStart}<rect width="620" height="470" rx="28" fill="#e6f5ff"/><path d="M0 335c150-44 245-38 355-4 95 30 174 22 265-10v149H0z" fill="#9cdf8f"/>${helmet(228,305,1.08)}${shield(390,318,.9)}${david(96,326,.76,"david-step")}<path d="M490 390c22-16 48-18 79-3" fill="none" stroke="#45b66b" stroke-width="12" stroke-linecap="round"/>${end}`,
+        stream: `${baseStart}${sky}${clouds}${stream}${stones}${david(164,298,.82,"david-pray")}<path d="M198 351c42 23 79 29 120 11" fill="none" stroke="#8d5a32" stroke-width="7" stroke-linecap="round"/>${sparkles}${end}`,
+        streamPrayer: `${baseStart}<rect width="620" height="470" rx="28" fill="#dff5ff"/><circle cx="86" cy="78" r="44" fill="#ffd86b"/>${clouds}<path d="M0 340c114-38 211-36 316 6 104 41 196 29 304-20v144H0z" fill="#aee9a4"/>${stream}<g class="david-motion david-pray"><g transform="translate(302 296) scale(.84)"><circle cx="0" cy="-62" r="22" fill="#f1b47a"/><path d="M-20-68c8-21 34-21 42 0-14-5-28-5-42 0z" fill="#6b3b24"/><path d="M-27-32h54l13 80h-80z" fill="#ef5f8d"/><path d="M-21-15c10 12 15 26 14 44M21-15c-10 12-15 26-14 44" fill="none" stroke="#f1b47a" stroke-width="9" stroke-linecap="round"/></g></g>${stones}<path d="M340 192c19-23 47-23 66 0" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/>${end}`,
+        valley: `${baseStart}${sky}${clouds}<path d="M0 350c122-50 196-42 314 5 91 36 189 34 306-8v123H0z" fill="#aee9a4"/>${flag}${giant}${david(148,329,.75,"david-step")}<path d="M165 321c53-12 102-4 151 24" fill="none" stroke="#8d5a32" stroke-width="7" stroke-linecap="round"/><circle cx="312" cy="344" r="7" fill="#8f9ab3"/>${grass}${end}`,
+        celebration: `${baseStart}<rect width="620" height="470" rx="28" fill="#dff5ff"/><circle class="sun-glow" cx="94" cy="78" r="44" fill="#ffd86b"/><path d="M0 338c98-50 202-50 302-5 108 48 203 42 318-5v142H0z" fill="#87d77a"/>${trophy}${david(118,329,.75,"david-walk")}<g class="soft-sparkles" fill="#ef5f8d"><circle cx="470" cy="98" r="9"/><circle cx="510" cy="150" r="7"/><circle cx="420" cy="165" r="6"/></g><g class="soft-sparkles" fill="#6157cc"><circle cx="170" cy="104" r="7"/><circle cx="216" cy="152" r="6"/><circle cx="548" cy="88" r="8"/></g>${end}`,
+        ending: `${baseStart}<rect width="620" height="470" rx="28" fill="#dff5ff"/><circle class="sun-glow" cx="86" cy="78" r="44" fill="#ffd86b"/><path d="M0 344c106-44 196-40 300-1 112 42 202 36 320-8v135H0z" fill="#8be980"/>${trophy}${shield(143,337,.58)}${helmet(476,336,.58)}<g class="soft-sparkles" fill="#ef5f8d"><circle cx="454" cy="105" r="8"/><circle cx="512" cy="158" r="7"/><circle cx="180" cy="150" r="7"/></g>${end}`,
+        endingHigh: `${baseStart}<rect width="620" height="470" rx="28" fill="#dff5ff"/><circle class="sun-glow" cx="86" cy="78" r="44" fill="#ffd86b"/><path d="M0 344c106-44 196-40 300-1 112 42 202 36 320-8v135H0z" fill="#8be980"/>${confetti}${trophy}${shield(143,337,.58)}${helmet(476,336,.58)}<g class="soft-sparkles" fill="#ef5f8d"><circle cx="454" cy="105" r="8"/><circle cx="512" cy="158" r="7"/><circle cx="180" cy="150" r="7"/></g>${end}`
+      };
+      return arts[type] || arts.hero;
+    }
+
+    function choiceIcon(type) {
+      const common = {
+        sheep: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e9f8ff"/><ellipse cx="42" cy="43" rx="24" ry="17" fill="#fff"/><circle cx="24" cy="43" r="12" fill="#4d3b32"/><circle cx="21" cy="40" r="2.5" fill="#fff"/><path d="M34 56v14M52 56v14" stroke="#4d3b32" stroke-width="5" stroke-linecap="round"/></svg>',
+        prayer: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff4cc"/><path d="M34 18c10 7 14 19 13 35M46 18c-10 7-14 19-13 35" fill="none" stroke="#8d5a32" stroke-width="7" stroke-linecap="round"/><path d="M30 53h20l-5 15H35z" fill="#45b66b"/><circle cx="40" cy="27" r="5" fill="#ffd86b"/></svg>',
+        feet: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e7f8e9"/><ellipse cx="30" cy="42" rx="10" ry="18" fill="#ef5f8d" transform="rotate(-18 30 42)"/><ellipse cx="50" cy="38" rx="10" ry="18" fill="#6157cc" transform="rotate(16 50 38)"/><circle cx="25" cy="23" r="4" fill="#ef5f8d"/><circle cx="53" cy="19" r="4" fill="#6157cc"/></svg>',
+        basket: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff0d4"/><path d="M22 34c4-23 33-23 37 0" fill="none" stroke="#8d5a32" stroke-width="6" stroke-linecap="round"/><path d="M18 34h44l-7 28H25z" fill="#c98645"/><path d="M23 43h34M25 53h30" stroke="#8d5a32" stroke-width="3"/><circle cx="32" cy="29" r="7" fill="#ffe2a1"/><circle cx="47" cy="29" r="7" fill="#fff7bd"/></svg>',
+        heart: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff0f5"/><path d="M40 62S18 49 18 32c0-9 7-15 15-15 5 0 9 2 12 6 3-4 7-6 12-6 8 0 15 6 15 15 0 17-22 30-32 30z" fill="#ef5f8d"/></svg>',
+        spark: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff7d9"/><path d="M40 12l8 20 21 8-21 8-8 20-8-20-21-8 21-8z" fill="#ffd86b"/><path d="M58 13l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="#ef5f8d"/></svg>',
+        song: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e9f8ff"/><path d="M32 22v34a9 9 0 1 1-6-8V25l31-7v31a9 9 0 1 1-6-8V25z" fill="#6157cc"/></svg>',
+        help: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e7f8e9"/><circle cx="29" cy="29" r="10" fill="#ffd86b"/><circle cx="52" cy="29" r="10" fill="#ef5f8d"/><path d="M19 62c3-12 17-19 29-12 4-5 10-8 17-8" fill="none" stroke="#45b66b" stroke-width="8" stroke-linecap="round"/></svg>',
+        wind: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e9f8ff"/><path d="M16 29h32c10 0 10-15 0-15-4 0-7 2-9 5M13 44h47c11 0 11 17-1 17-5 0-8-2-11-6M19 56h18" fill="none" stroke="#86d9ff" stroke-width="7" stroke-linecap="round"/></svg>',
+        smile: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff7d9"/><circle cx="40" cy="40" r="25" fill="#ffd86b"/><circle cx="31" cy="34" r="4" fill="#21304a"/><circle cx="49" cy="34" r="4" fill="#21304a"/><path d="M28 47c7 8 17 8 24 0" fill="none" stroke="#21304a" stroke-width="5" stroke-linecap="round"/></svg>',
+        question: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e9f8ff"/><path d="M30 30c1-10 8-16 18-14 9 2 14 9 12 17-2 9-11 11-15 17" fill="none" stroke="#6157cc" stroke-width="8" stroke-linecap="round"/><circle cx="41" cy="62" r="5" fill="#6157cc"/></svg>',
+        shield: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#ecebff"/><path d="M40 13l26 10v21c0 22-16 33-26 38-10-5-26-16-26-38V23z" fill="#6157cc"/><path d="M40 22l14 5v16c0 12-7 20-14 25z" fill="#9189ff"/><path d="M27 38h26M40 24v42" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>',
+        truth: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e7f8e9"/><path d="M20 49l13 13 28-40" fill="none" stroke="#45b66b" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        comfort: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff0f5"/><path d="M20 39c11-18 29-18 40 0" fill="none" stroke="#ef5f8d" stroke-width="8" stroke-linecap="round"/><path d="M20 42c8 13 32 20 40 0" fill="none" stroke="#ffd86b" stroke-width="8" stroke-linecap="round"/></svg>',
+        breath: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e9f8ff"/><path d="M21 34h24c8 0 8-12 0-12-4 0-6 2-8 5M18 48h39c9 0 9 14 0 14-4 0-8-2-10-6" fill="none" stroke="#86d9ff" stroke-width="7" stroke-linecap="round"/></svg>',
+        dove: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e9f8ff"/><path d="M19 44c15-20 30-17 42 0-10-4-18-2-25 7-5 6-12 8-17-7z" fill="#fff"/><path d="M47 38l16-9-7 16" fill="#fff"/><circle cx="55" cy="36" r="2" fill="#21304a"/></svg>',
+        path: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e7f8e9"/><path d="M35 70c-11-20-4-36 17-54" fill="none" stroke="#d7a15e" stroke-width="14" stroke-linecap="round"/><path d="M40 70c-7-18 0-32 17-48" fill="none" stroke="#fff0ba" stroke-width="6" stroke-linecap="round"/></svg>',
+        scroll: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff7d9"/><path d="M25 17h31c6 0 9 4 9 9s-3 9-9 9h-4v28H24c-6 0-9-4-9-9s3-9 9-9h4V26c0-5-2-9-3-9z" fill="#ffe2a1"/><path d="M34 31h19M34 43h16M34 55h13" stroke="#8d5a32" stroke-width="4" stroke-linecap="round"/></svg>',
+        stand: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#ecebff"/><circle cx="40" cy="21" r="10" fill="#f1b47a"/><path d="M25 40h30l7 30H18z" fill="#6157cc"/><path d="M22 42c-7 7-10 13-10 20M58 42c7 7 10 13 10 20" stroke="#f1b47a" stroke-width="7" stroke-linecap="round"/></svg>',
+        helmet: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#edf1f9"/><path d="M18 40c0-20 13-34 31-34s30 14 30 34v17H18z" fill="#7b85a6"/><path d="M29 39c0-12 8-21 19-21 12 0 20 9 20 21z" fill="#d9e0f0"/><path d="M14 59h58" stroke="#3d4766" stroke-width="7" stroke-linecap="round"/></svg>',
+        thanks: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff7d9"/><path d="M40 62S19 50 19 34c0-8 6-14 14-14 4 0 8 2 11 5 3-3 7-5 11-5 8 0 14 6 14 14 0 16-21 28-29 28z" fill="#ffd86b"/><path d="M31 40h18" stroke="#8d5a32" stroke-width="5" stroke-linecap="round"/></svg>',
+        steps: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e7f8e9"/><circle cx="24" cy="57" r="7" fill="#45b66b"/><circle cx="40" cy="45" r="7" fill="#45b66b"/><circle cx="56" cy="33" r="7" fill="#45b66b"/><path d="M21 25h38" stroke="#ffd86b" stroke-width="7" stroke-linecap="round"/></svg>',
+        stones: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e9f8ff"/><ellipse cx="24" cy="46" rx="12" ry="8" fill="#8f9ab3"/><ellipse cx="40" cy="34" rx="12" ry="8" fill="#a9b2c6"/><ellipse cx="56" cy="48" rx="13" ry="8" fill="#7b85a6"/><path d="M12 62c20-8 36-8 56 0" stroke="#86d9ff" stroke-width="6" stroke-linecap="round"/></svg>',
+        streamPrayer: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e9f8ff"/><path d="M12 58c15-10 27-4 41-9 8-3 12-8 15-12" fill="none" stroke="#86d9ff" stroke-width="8" stroke-linecap="round"/><path d="M34 18c10 8 13 19 12 32M46 18c-10 8-13 19-12 32" fill="none" stroke="#8d5a32" stroke-width="6" stroke-linecap="round"/></svg>',
+        faith: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff7d9"/><circle cx="40" cy="40" r="26" fill="#ffd86b"/><path d="M40 21v36M28 34h24" stroke="#fff" stroke-width="7" stroke-linecap="round"/></svg>',
+        target: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#ecebff"/><circle cx="40" cy="40" r="28" fill="#fff"/><circle cx="40" cy="40" r="19" fill="#9189ff"/><circle cx="40" cy="40" r="9" fill="#6157cc"/><path d="M51 29l13-13" stroke="#ef5f8d" stroke-width="5" stroke-linecap="round"/></svg>',
+        flag: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#e7f8e9"/><path d="M25 66V16" stroke="#8d5a32" stroke-width="6" stroke-linecap="round"/><path d="M28 18h35l-8 13 8 13H28z" fill="#45b66b"/></svg>',
+        praise: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff7d9"/><path d="M40 12l7 17 18 2-13 12 4 18-16-9-16 9 4-18-13-12 18-2z" fill="#ffd86b"/><path d="M40 25v18M32 34h16" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>',
+        trophy: '<svg viewBox="0 0 80 80"><rect width="80" height="80" rx="22" fill="#fff7d9"/><path d="M27 16h26v17c0 13-6 21-13 23-7-2-13-10-13-23z" fill="#ffd86b"/><path d="M25 22H14c1 17 9 24 20 25M55 22h11c-1 17-9 24-20 25" fill="none" stroke="#f7a928" stroke-width="6" stroke-linecap="round"/><path d="M40 56v10M28 67h24" stroke="#8d5a32" stroke-width="6" stroke-linecap="round"/></svg>'
+      };
+      return common[type] || common.spark;
+    }
+  </script>
 </body>
 </html>
